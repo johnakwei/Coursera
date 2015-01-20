@@ -1,0 +1,79 @@
+DataSet List
+
+DATASET 1
+fileUrL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv?AccessType=DOWNLOAD"
+download.file(fileUrL, destfile = "Fss06pid.csv")
+
+DATASET 2
+dat <- read.csv("getdata-data-DATA.gov_NGAP.xlsx - Sheet1.csv")
+
+DATASET 3
+library(XML)
+fileUrL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml"
+doc <- xmlTreeParse(fileUrL, useInternal = TRUE)
+
+DATASET 4
+con = url("http://scholar.google.com/citations?user=HI-I6C0AAAAJ&hI=en")
+htmlCode = readLines(con)
+close(con)
+htmlCode
+library(XML)
+url <- "http://scholar.google.com/citations?user=HI-I6C0AAAAJ&hI=en"
+html <- htmlTreeParse(url, useInternalNodes = T)
+xpathSApply(html, "//title", xmlValue)
+xpathSApply(html, "//td[@id='col-citedby']", xmlValue)
+
+DATASET 5
+source("http://biostat.jhsph.edu/~jleek/code/twitterMap.R")
+userName <- "@JohnAkwei"
+twitterMap <- function(userName,userLocation=NULL,fileName="twitterMap.pdf",nMax = 1000,plotType=c("followers","both","following"))
+install.packages("twitteR")
+library('twitteR') #version 0.99.19
+user <- getUser("@JohnAkwei")
+friends <- user$getFriends()
+start<-getUser("@JohnAkwei")
+follower.object<-lookupUsers(start$getFollowerIDs())
+
+DATASET 6
+fileUrL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv?AccessType=DOWNLOAD"
+download.file(fileUrL, destfile = "Fss06pid.csv")
+list.files()
+acs <- read.csv("Fss06pid.csv")
+
+DATASET 7
+read.table("https://d396qusza40orc.cloudfront.net/getdata%2Fwksst8110.for")
+con <- url("https://d396qusza40orc.cloudfront.net/getdata%2Fwksst8110.for", "r")
+x <- readLines(con)
+
+DATASET 8
+x <- read.fwf(
+  file=url("http://www.cpc.ncep.noaa.gov/data/indices/wksst8110.for"),
+  skip=4,
+  widths=c(12, 7,4, 9,4, 9,4, 9,4))
+  
+DATASET 9
+if(!file.exists("./data")) {dir.create("./data")}
+fileUrL <- "https://data.baltimorecity.gov/api/views/k5ry-ef3g/rows.csv?accessType=DOWNLOAD"
+download.file(fileUrL, destfile="./data/restaurants.csv")
+restData <- read.csv("./data/restaurants.csv")
+
+DATASET 10
+if(!file.exists("./data")){dir.create("./data")}
+fileUrL1 = "https://dl.dropboxusercontent.com/u/7710864/data/reviews-apr29.csv"
+fileUrL2 = "https://dl.dropboxusercontent.com/u/7710864/data/solutions-apr29.csv"
+download.file(fileUrL1, destfile = "./data/reviews.csv")
+download.file(fileUrL2, destfile = "./data/solutions.csv")
+reviews = read.csv("./data/reviews.csv"); solutions <- read.csv("./data/solutions.csv")
+
+DATASET 11
+datafile <- "getdata-projectfiles-UCI.zip"
+datadir  <- "/Users/johnakwei/Desktop/Coursera/GettingandCleaningData/Course Project/getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset"
+testdir  <- paste(datadir, "test", sep="/")
+traindir <- paste(datadir, "train", sep="/")
+if (!file.exists(datafile)) {
+  fileURL <- "http://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+  download.file(fileURL, datafile)
+}
+if (!file.exists(datadir)) { 
+    unzip(datafile) 
+}
