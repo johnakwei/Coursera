@@ -1,0 +1,33 @@
+Matthew Albright
+I want to grab the complete history of Florida lottery numbers. Mostly from the games that run once or twice a day. Maybe compare it with a moon phase or something and have it spit out the best numbers daily. Or better yet make a few fancy functions that give me some good stock picks! Data Scientists will rule the world! Muahahaha!!!
+
+Matthew Albright
+https://github.com/programmed/best-lottery-number I made a repository with some php code to grab winning number history and store into a comma delimited csv file. Practicing with the data set now.
+
+John Akwei
+Unfortunately, the more valuable a Lottery prize is, the less likely the Lottery is honest. There are extensive connections between Mafia organized gangs, Governments, Police orgs, the Pentagon, etc. The priorities of State Lotteries might include Security, Patriotism, economic control, etc.
+
+From the Washington Post, http://www.washingtonpost.com/blogs/ezra-klein/post/how-to-hack-the-lottery/2011/08/24/gIQA3yZHbJ_blog.html:
+
+"Most lotteries, obviously, want to turn a profit—especially if they’re supposed to provide a relatively stable source of revenue for the government. And that means they want to control how many people win,"
+
+Also, "The game can’t be truly random. Instead, it has to generate the illusion of randomness while actually being carefully determined.”
+
+Here is someone on LinkedIn that gets 3-4 out of 5 Lotto numbers with R programming:
+https://www.linkedin.com/groups/Lotto-Analysis-77616.S.133952756
+
+Other articles:
+http://www.dailymail.co.uk/news/article-2023514/Joan-R-Ginther-won-lottery-4-times-Stanford-University-statistics-PhD.html
+
+http://articles.boston.com/2011-07-31/news/29836200_1_lottery-tickets-claim-prizes-massachusetts-state-lottery
+
+http://www.wired.com/magazine/2011/01/ff_lottery/
+
+http://andrewgelman.com/2011/02/statistician_cr/
+
+John Akwei
+Here is some more information:
+
+AnalyticBridge/Data Science Central examined predicting winning lottery numbers in 2011 - http://www.analyticbridge.com/profiles/blogs/are-lottery-winning-numbers-really-random.
+
+Also, here is some programming help - http://www.analyticbridge.com/profiles/blogs/how-to-detect-a-pattern-problem-and-solution.

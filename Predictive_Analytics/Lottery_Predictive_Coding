@@ -1,0 +1,95 @@
+##Lottery Predictive Analytics from Data Science Central
+set.seed(1)
+a <- x <- runif(158)
+b <- y <- runif(158)
+u <- runif(158)
+v <- runif(158)
+
+r <- 0.1
+s <- 0.4
+
+for (n in 2:length(a)) {
+  if (u[n] >= r) {
+    x[n] <- s*v[n]*a[n] + (1-s*v[n])*x[n-1]
+    y[n] <- s*v[n]*b[n] + (1-s*v[n])*y[n-1]
+  }
+}
+
+plot(a, b, pch = "+", col = "grey90")
+points(x, y, pch = "+")
+hist(a*b, freq = TRUE, col = rgb(1, 0, 0, .5))
+hist(x*y, freq = TRUE, col = rgb(0, 0, 1, .5), add = TRUE)
+print(var.test(x*y, runif(1e6)*runif(1e6)))
+
+##From a SAS blog
+##proc iml
+N = 20
+pUnif = j(N,2)
+call randseed(1234)
+call randgen(pUnif, "uniform"); ##generate random uniform
+
+##Define regular grid: 0, 0.33, 0.67, 1
+XMin = 0; XMax = 1; Nx = 3; dx = 1/Nx
+YMin = 0; YMax = 1; Ny = 3; dy = 1/Ny
+XDiv = do(XMin, XMax, dx)
+YDiv = do(YMin, YMax, dy)
+
+##count the points in each cell
+load module=Bin2D
+countUnif = Bin2D(pUnif, XDiv, YDiv)
+
+c = countUnif
+NBins = (ncol(XDiv)-1) * (ncol(YDiv)-1)
+e = N/NBins  ##expected value
+resid = (c - e)
+d = sum( resid##2 ) ##index of dispersion
+         print resid
+         
+         L = quantile("chisquare", 0.05, NBins-1)
+         R = quantile("chisquare", 0.95, NBins-1)
+         print d L R
+
+##Lottery Predictive Analytics coding by John Akwei
+x <- data.frame(read.csv("lotto.csv", header = TRUE))
+plot(x)
+names(x)
+fix(x)
+plot(x$Number.1)
+head(x)
+mean(x$Number.1)
+mean(x$Number.2)
+mean(x$Number.3)
+mean(x$Number.4)
+mean(x$Number.5)
+x <- c(10, 14, 17, 21, 24)
+mine <- c(12, 20, 21, 28, 31)
+table.combos <- matrix(data = 1:12, nrow = 1000, ncol = 6) 
+row.is.a.match <- apply(table.combos, 1, identical, mine) 
+match.idx <- which(row.is.a.match) 
+total.matches <- sum(row.is.a.match)
+plot(mine)
+plot(head(x))
+y <- head(x)
+plot(y$Date, y$Number.1)
+lm(x)
+sd(x$Number.1)
+sd(x$Number.2)
+lm(x$Number.1)
+sd(x$Number.5)
+predict(x, x$Number.1)
+lines(x$Number.1)
+numberRows(x)
+summary(x)
+lapply(x[2], mean)
+mean(x$Number.1)
+x <- read.csv("lotto sample.csv")
+plot(x$Date, x$Number.3, col = "red", xlab = "Date", ylab = "3rd Number")
+mean(x$Number.5)
+lm(x)
+length(x)
+x <- read.csv("lotto sample.csv")
+length(x)
+dim(x)
+plot(x)
+hist(x$Number.1, col = "red")
+attributes(x)
