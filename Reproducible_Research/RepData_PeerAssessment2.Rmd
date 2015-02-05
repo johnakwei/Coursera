@@ -23,6 +23,7 @@ to mitigate effects on the health, and property, of US citizens.
 ```{r}
 echo=T
 options(scipen=999)
+suppressMessages()
 required <- function(wd) {
   setwd(wd)
   if (!require("data.table")) { install.packages("data.table"); require("data.table") }
@@ -51,7 +52,7 @@ if (!file.exists(extracted)) { bunzip2(unextracted) }
 StormData <- read.table("repdata-data-StormData.csv", sep=",", header=T)
 StormData$BGN_DATE <- strptime(StormData$BGN_DATE, format="%m/%d/%Y 0:00:00")
 StormData$FATALITIES <- as.numeric(StormData$FATALITIES)
-StormData$FATALITIES <- as.numeric(StormData$INJURIES)
+StormData$INJURIES <- as.numeric(StormData$INJURIES)
 StormData$PROPDMG <- as.numeric(StormData$PROPDMG)
 ```
 
