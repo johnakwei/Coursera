@@ -23,7 +23,6 @@ to mitigate effects on the health, and property, of US citizens.
 ```{r}
 echo=T
 options(scipen=999)
-suppressMessages()
 required <- function(wd) {
   setwd(wd)
   if (!require("data.table")) { install.packages("data.table"); require("data.table") }
@@ -35,7 +34,7 @@ required <- function(wd) {
   if (!require("ggplot2")) { install.packages("ggplot2"); require("ggplot2") }
   if (!require("R.utils")) { install.packages("R.utils"); require("R.utils") }
 }
-required("C:/Users/johnakwei/Desktop/Coursera/ReproducibleResearch/Week3/RepData_PeerAssessment2")
+suppressMessages(required("C:/Users/johnakwei/Desktop/Coursera/ReproducibleResearch/Week3/RepData_PeerAssessment2"))
 ```
 
 #### Data download and extraction  
