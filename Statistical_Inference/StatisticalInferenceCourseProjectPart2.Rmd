@@ -1,0 +1,66 @@
+---
+title: "Effects of Supplements on Tooth Growth of Guinea Pigs"
+author: "John Akwei, ECMp ERMp"
+date: "Sunday, February 15, 2015"
+output: pdf_document
+---
+
+### Synopsis  
+This document examines measurements of tooth growth in Guinea Pigs, who have been given Vitamin C supplements. The supplements are of type VC or OJ, and are given in three different doses, 0.5 mg, 1.0 mg, and 2.0 mg.  
+
+```{r, echo=F, message=F, warning=F}
+options(scipen=999)
+required <- function(wd) {
+setwd(wd)                        
+if (!require("dplyr")) { install.packages("dplyr"); require("dplyr") }
+if (!require("ggplot2")) { install.packages("ggplot2"); require("ggplot2") }
+}
+required("C:/Users/johnakwei/Desktop/Coursera/StatisticalInference/CourseProject")
+```
+
+```{r, echo=F}
+data(ToothGrowth)
+ToothGrowth$dose <- factor(ToothGrowth$dose)
+```
+
+#### Histograms of tooth growth length, comparing supplement types, and dosage types  
+```{r, echo=F}
+ggplot(data=ToothGrowth, aes(x=supp, y=len)) + 
+geom_boxplot(aes(fill=supp))
+ggplot(data=ToothGrowth, aes(x=dose, y=len)) + 
+geom_boxplot(aes(fill=dose))
+```
+
+#### Conclusion:  
+The above graphs in graph 1) the difference in supplement types, (OJ vs VC), having a marginal effect on tooth growth in the population of guinea pigs, and in graph 2) the supplement dosage level having a significant effect on tooth growth in the population of Guinea Pigs, with the dosage level of 2.0 milligrams promoting the greatest amount of tooth growth.  
+
+#### Confidence interval t-test of the difference between the two supplements  
+```{r, echo=F}
+OJ <- filter(ToothGrowth, supp=="OJ")
+VC <- filter(ToothGrowth, supp=="VC")
+t.test(OJ$len,VC$len, paired=F)$conf.int
+```
+
+#### Conclusion:  
+The confidence interval spans 0, therefore supplement type has no effect.  
+
+#### Confidence interval t-tests of dosage group differences  
+```{r, echo=F}
+doses <- distinct(select(ToothGrowth, dose))$dose
+dose1 <- filter(ToothGrowth, dose==doses[1])
+dose2 <- filter(ToothGrowth, dose==doses[2])
+dose3 <- filter(ToothGrowth, dose==doses[3])
+
+t.test(dose1$len, dose2$len, paired=F)$conf.int
+t.test(dose1$len, dose3$len, paired=F)$conf.int
+t.test(dose2$len, dose3$len, paired=F)$conf.int
+# t.test(len~supp, data=tg1)
+```
+
+## Final Conclusions  
+The assumptions required for a conclusive assessment of the ToothGrowth data are
+1) the samples were analyzed without pairing
+2) the samples were analyzed with equal variance
+3) a random population of 60 Guinea Pigs were used
+
+Via the above analysis method, it is determinable that the effects of the supplement type, when tested for confidence level, are marginal. Via inference, the factor affecting tooth growth in the Guinea Pigs the greatest is supplement dosage level.
