@@ -6,6 +6,6 @@
 ##### Files Included:
 
 * StatisticalInferenceCourseProject.Rmd
-* Description: Inferenctial Analysis of an Exponential Distribution
+* Description: Inferential Analysis of an Exponential Distribution
 * StatisticalInferenceCourseProjectPart2.Rmd
 * Description: Effects of Supplements on Tooth Growth of Guinea Pigs
