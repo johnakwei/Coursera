@@ -1,0 +1,102 @@
+---
+title: "Inferential Data Analysis of an Exponential Distribution"
+author: "John Akwei, ECMp ERMp"
+date: "Sunday, February 15, 2015"
+output: html_document
+---
+
+#### Synopsis  
+This document generates a simulation, (in the R programming language), of the distribution of the mean of 40 exponentials. The relationship of the two distributions is then verified with the Central Limit Theorem.  
+```{r, echo=F, message=F, warning=F}
+options(scipen=999)
+if (!require("ggplot2")) { install.packages("ggplot2"); require("ggplot2") }
+```
+
+#### Simulation of an Exponential Distribution  
+The following R progamming language code creates a distribution of averages of 40 exponentials, with rexp(n, lambda), where lambda is the rate parameter.  
+
+The mean of exponential distribution is 1/lambda. Lambda is set at 0.2 for all of the simulations. A thousand simulation are performed, in order to increase the power of the analysis.  
+```{r, echo=F}
+# Parameters:
+set.seed(7); lambda <- 0.2; m <- 40; n <- 1000
+# Variables:
+simulationArray <- replicate(m, rexp(n, lambda))
+simulationMean <- apply(simulationArray, 2, mean)
+# Graph:
+hist(simulationMean, xlab="Mean", ylab="Frequency", main="Distribution of the Mean of 40 Exponentials", col="blue")
+```
+
+#### Comparison of the sample mean of the distribution to theoretical mean  
+Sample mean:  
+```{r, echo=F}
+sampleMean <- mean(simulationMean); sampleMean
+```
+Theoretical mean:  
+```{r, echo=F}
+theoreticalMean <- 1/lambda; theoreticalMean
+```
+
+#### Conclusion:  
+The analysis demonstrates the center of the distribution of the sample is approximately the theoretical center.  
+
+#### Compararison of sample variance to theoretical variance  
+Sample Deviation:  
+```{r, echo=F}
+sampleDeviation <- sd(simulationMean); sampleDeviation
+```
+Theoretical Deviation:  
+```{r, echo=F}
+theoreticalDeviation <- (1/lambda)/sqrt(n); theoreticalDeviation
+```
+Sample Variance:  
+```{r, echo=F}
+sampleVariance <- sampleDeviation^2; sampleVariance
+```
+Theoretical Variance:  
+```{r, echo=F}
+theoreticalVariance <- ((1/lambda)*(1/sqrt(n)))^2; theoreticalVariance
+```
+
+#### Conclusion:  
+The standard variance is close to the theoretical variance.  
+
+#### Graph: Normality of the exponential distribution  
+```{r, echo=F, message=F, warning=F}
+alignment <- function(align=c("left", "center", "right"))
+{
+    # get alignment choice
+    align <- match.arg(align)
+
+    left.margin <- c(left="0", center="auto", right="auto")
+    right.margin <- c(left="auto", center="auto", right="0")
+
+    sprintf("display:block; margin-left: %s ; margin-right: %s ;", left.margin[align], right.margin[align])
+}
+alignment("center")
+plotdata <- data.frame(simulationMean)
+ggplot(plotdata, aes(x=simulationMean)) +
+geom_histogram(aes(y=..density..), col="blue", fill="blue") +
+geom_density(col="orange", size=1) +
+xlab("Mean") +
+ylab("Density") +
+ggtitle("Normality of the Distribution")
+```
+
+#### Graph: Verification of normality of the tests  
+```{r, echo=F, message=F, warning=F}
+alignment <- function(align=c("left", "center", "right"))
+{
+    # get alignment choice
+    align <- match.arg(align)
+
+    left.margin <- c(left="0", center="auto", right="auto")
+    right.margin <- c(left="auto", center="auto", right="0")
+
+    sprintf("display:block; margin-left: %s ; margin-right: %s ;", left.margin[align], right.margin[align])
+}
+alignment("center")
+qqnorm(simulationMean, col="blue"); qqline(simulationMean, col="orange")
+```
+
+## Final Conclusion  
+The Exponential Simulation in this document follows the characteristics of the Central Limit Theorem.  
