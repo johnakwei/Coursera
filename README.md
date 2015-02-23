@@ -14,3 +14,4 @@
 #####Predictive_Analytics  
 #####R_Programming  
 #####Reproducible_Research  
+#####Statistical_Inference
