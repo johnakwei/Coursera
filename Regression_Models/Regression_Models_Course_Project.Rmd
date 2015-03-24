@@ -1,0 +1,83 @@
+---
+title: "MPG Efficiency of Automatic vs. Manual Transmissions"
+author: "John Akwei"
+date: "Wednesday, March 11, 2015"
+output: html_document
+---
+
+## Executive Summary  
+For Motor Trend business confidential information, this documents explores the findings of the "mtcars" dataset, produced by the 1974 Motor Trend road tests of 32 automobiles, (from a variety of manufacturers and with a variety of car models). The emphasis in the analysis is the quantification of the Miles Per Gallon difference between automatic and manual transmissions.  
+
+The analysis within this document uses exploratory data analysis, regression modeling, and statistical inference to determine whether an automatic or manual transmission, (installed by the factory), is the preferable choice in order to increase the amount of miles driven per gallon of gasoline.  
+
+## Exploratory Data Analysis  
+The dataset created by the road tests includes the following data categories:  
+```{r, echo=FALSE, warning=F, message=F}
+data(mtcars)
+names(mtcars)
+```
+mpg (miles per gallon)  | cyl (Amount of engine cylinders)  
+disp (cubic inches displacement of the engine cylinders)  | hp (maximum horsepower output of the engine)  
+drat (rear axle ratio) | wt (automobile weight)  
+qsec (seconds to reach the end of a quarter mile) | vs (V engine or "Straight" inline engine)  
+am (automatic or manual transmission) | gear (number of transmission gears)
+carb (type of carburetor)  
+
+Below is the first 5 lines of data within the "mtcars" dataset:  
+```{r, echo=FALSE, warning=F, message=F}
+head(mtcars)
+```
+
+The first step in the analysis of the mtcars data is comparison of MPG data with transmission type, (Figure 1). The MPG range of automatic transmissions is in green, and the MPG range of manual transmissions is in blue. As you can see from Figure 1, manual transmissions span a generally higher MPG range than automatic transmissions.  
+
+## Regression Analysis  
+Table 1 correlates the "mtcars" dataset testing variables with the MPG findings, in order to determine the variable within the mtcars dataset that affects MPG the greatest.  
+
+Table 2 then defines the variables as multiple models, that are then fitted to determine the relevant variables for MPG analysis.  
+
+## Statistical Inference
+Figure 2 is a plot of residuals, and demonstrates the certainty of the probability analysis of MPG changes, in the close correlation of fitted values and leverage.  
+
+Table 3 is a summary of the coefficients of the regression models.  
+
+The uncertainties of the linear regression are quantified in Table 4.  
+
+## Conclusion
+The preceding analysis determines that manual transmissions produce the greatest fuel efficiency (MPG), and automatic transmissions increase the inefficiency of fuel consumption.  
+
+The MPG increase with manual transmissions is a factor of 1.8 over automatic transmissions. A -0.03 MPG decrease occurs with increased horsepower. A -2.5 decrease in MPG occurs with every 1000lbs of weight increase. 6 cylinder engines have a beneficial effect on MPG by a factor of 0.87, over 8 cylinder engines. The intercept is at 33.7 mpg, and the overall p-value is very small (1.506 x 10 ^ -10) which means that there is a very small uncertainty of the analysis results. 
+
+## Appendix: Figures/Tables  
+
+## Figure 1  
+```{r, echo=FALSE, warning=F, message=F}
+pairs(~mpg+am, mtcars, panel=panel.smooth, main="MPG by Transmission Type", col=3+(mtcars$am>0))
+```
+
+## Table 1  
+```{r, echo=FALSE, warning=F, message=F}
+head(cor(mtcars), 1)
+```
+
+## Table 2  
+```{r, echo=FALSE, warning=F, message=F}
+fit1 <- lm(mpg~am, mtcars)
+fit2 <- lm(mpg~am+wt+qsec, mtcars)
+anova(fit1, fit2)
+```
+
+## Figure 2  
+```{r, echo=FALSE, warning=F, message=F}
+par(mfrow = c(2, 2))
+plot(fit2)
+```
+
+## Table 3  
+```{r, echo=F, warning=F, message=F}
+summary(fit2)$coef
+```
+
+## Table 4  
+```{r, echo=F, warning=F, message=F}
+t.test(mpg~am, mtcars)
+```
