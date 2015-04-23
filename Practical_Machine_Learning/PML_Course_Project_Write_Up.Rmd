@@ -1,0 +1,66 @@
+---
+title: "Practical Machine Learning of Qualitative Human Activity"
+author: "John Akwei, ECMp ERMp"
+date: "Wednesday, April 15, 2015"
+output: html_document
+---  
+
+#### Synopsis:  
+This document incorporates the activity monitoring device data from  "http://groupware.les.inf.puc-rio.br/har", in order to predict the manner in which the test subjects performed a dumbbell lifting exercise. If the data from this document is used for any other research, please cite the preceding source because of generousity of data distribution.  
+
+The data includes Euler angles, accelerometer, gyroscope, and magnetometer readings. The variable to predict is "classe", (involving 1 correct exercise and 4 types of exercise mistakes), and ranges from A to E.  
+
+Further information on the data in this document is at: "Velloso, E.; Bulling, A.; Gellersen, H.; Ugulino, W.; Fuks, H. Qualitative Activity Recognition of Weight Lifting Exercises. Proceedings of 4th International Conference in Cooperation with SIGCHI (Augmented Human '13) . Stuttgart, Germany: ACM SIGCHI, 2013." 
+
+The training data source is at "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv". The test data source is at "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv".  
+
+```{r, message=F, warning=F}
+#setwd("C:/Users/johnakwei/Desktop/Coursera/PracticalMachineLearning/CourseProjectWriteUp")
+if (!require("ggplot2")) { install.packages("ggplot2"); require("ggplot2") }
+if (!require("plyr")) { install.packages("plyr"); require("plyr") }
+if (!require("caret")) { install.packages("caret"); require("caret") }
+if (!require("randomForest")) { install.packages("randomForest"); require("randomForest") }
+if (!require("e1071")) { install.packages("e1071"); require("e1071") }
+```
+
+#### Data Input:  
+```{r}
+training <- read.csv("pml-training.csv", na.strings=c("", "NA", "NULL"))
+testing <- read.csv("pml-testing.csv", na.strings=c("", "NA", "NULL"))
+```
+
+#### Data Cleaning:  
+```{r}
+training <- training[, colSums(is.na(training)) == 0]
+testing <- testing[, colSums(is.na(testing)) == 0]
+training <- training[, c(7:60)]
+testing <- testing[, c(7:60)]
+```
+
+#### Cross Validation
+```{r}
+inTrain <- createDataPartition(y=training$classe, p=0.70, list=F)
+train <- training[inTrain,]
+test <- training[-inTrain,]
+model <- train(classe ~., data=train, method="rf", prox=T, 
+trControl = trainControl(method = "cv", number=4, allowParallel=T))
+model
+```
+
+#### Confusion matrixes and Expected Out-Of-Sample error:  
+```{r}
+test_pred <- predict(model, test)
+confusionMatrix(test_pred, test$classe)
+```
+
+#### Output files:  
+```{r}
+pred_testing <- predict(model, testing)
+pred_testing <- as.character(pred_testing)
+pred_testing
+```
+
+#### Summary:  
+The accuracy of the model is 0.9964, and proves the accuracy of the machine learning algorithm. The out of sample error is 0.0056. However, the level of fitting accomplished with the Random Forest prediction model might to scale for other data.  
+
+The machine learning predictions in this document demonstrate the difficulty of predicting partial, (halway), dumbbell movements by the sensory apparatus chosen.  
