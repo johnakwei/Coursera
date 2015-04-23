@@ -25,42 +25,42 @@ if (!require("e1071")) { install.packages("e1071"); require("e1071") }
 
 #### Data Input:  
 ```{r}
-training <- read.csv("pml-training.csv", na.strings=c("", "NA", "NULL"))
-testing <- read.csv("pml-testing.csv", na.strings=c("", "NA", "NULL"))
+training <- read.csv("pml-training.csv", na.strings=c("","NA","NULL"))
+testing <- read.csv("pml-testing.csv", na.strings=c("","NA","NULL"))
 ```
 
 #### Data Cleaning:  
 ```{r}
-training <- training[, colSums(is.na(training)) == 0]
-testing <- testing[, colSums(is.na(testing)) == 0]
+training <- training[, colSums(is.na(training))==0]
+testing <- testing[, colSums(is.na(testing))==0]
 training <- training[, c(7:60)]
 testing <- testing[, c(7:60)]
 ```
 
 #### Cross Validation
-```{r}
+```{r, cache=T}
 inTrain <- createDataPartition(y=training$classe, p=0.70, list=F)
 train <- training[inTrain,]
 test <- training[-inTrain,]
 model <- train(classe ~., data=train, method="rf", prox=T, 
-trControl = trainControl(method = "cv", number=4, allowParallel=T))
+trControl=trainControl(method="cv", number=4, allowParallel=T))
 model
 ```
 
-#### Confusion matrixes and Expected Out-Of-Sample error:  
+#### Confusion Matrixes and Expected Out-Of-Sample error:  
 ```{r}
-test_pred <- predict(model, test)
-confusionMatrix(test_pred, test$classe)
+testPrediction <- predict(model, test)
+confusionMatrix(testPrediction, test$classe)
 ```
 
 #### Output files:  
 ```{r}
-pred_testing <- predict(model, testing)
-pred_testing <- as.character(pred_testing)
-pred_testing
+predictionTesting <- predict(model, testing)
+predictionTesting <- as.character(predictionTesting)
+predictionTesting
 ```
 
 #### Summary:  
-The accuracy of the model is 0.9964, and proves the accuracy of the machine learning algorithm. The out of sample error is 0.0056. However, the level of fitting accomplished with the Random Forest prediction model might to scale for other data.  
+The accuracy of the model is 0.9964, and proves the accuracy of the machine learning algorithm. The out of sample error is 0.0056. However, the level of fitting accomplished with the Random Forest prediction model might not scale for other data.  
 
-The machine learning predictions in this document demonstrate the difficulty of predicting partial, (halway), dumbbell movements by the sensory apparatus chosen.  
+The machine learning predictions in this document demonstrate the difficulty of predicting partial, (halfway), dumbbell movements by the sensory apparatus chosen for data gathering.  
