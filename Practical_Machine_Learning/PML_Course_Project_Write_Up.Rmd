@@ -63,7 +63,14 @@ confusionMatrix(prediction, test$classe)
 ```{r, cache=T}
 model2 <- randomForest(classe~., data=train, na.action=na.omit)
 prediction2 <- predict(model2, test, type="class")
-confusionMatrix(prediction2, test$classe)
+result2 <- confusionMatrix(prediction2, test$classe)
+result2
+```
+
+#### Expected Out-Of-Sample Error Rate:  
+```{r}
+OutErrorRate <- 1 - result2[["overall"]][["Accuracy"]]
+OutErrorRate
 ```
 
 #### Output files:  
@@ -74,6 +81,6 @@ predictionResult
 ```
 
 #### Summary:  
-The machine learning algorithm with the highest accuracy is the Random Forest model with 99.6% accuracy. However, the level of fitting accomplished with the Random Forest prediction model might not scale for other data.  
+The machine learning algorithm with the highest accuracy is the Random Forest model with 99.6% accuracy, and a 0.39% Out of Sample Error Rate. However, the level of over fitting with the Random Forest prediction model might not scale for other data.  
 
 The inaccuracy of the predictions for Class B through E, demonstrates the difficulty of predicting partial and inaccurate dumbbell movements by the sensory apparatus chosen for data gathering, as analyzed by Machine Learning algorithms.  
