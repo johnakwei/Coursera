@@ -1,12 +1,12 @@
 ---
-title: "Practical Machine Learning of Qualitative Human Activity"
+title: "Machine Learning of Qualitative Human Activity"
 author: "John Akwei, ECMp ERMp"
 date: "Wednesday, April 15, 2015"
 output: html_document
 ---  
 
 #### Synopsis:  
-This document incorporates the activity monitoring device data from "http://groupware.les.inf.puc-rio.br/har", in order to predict the manner in which the test subjects performed a dumbbell lifting exercise. If the data from this document is used for any other research, please cite the preceding source because of generousity of data distribution.  
+This document incorporates the activity monitoring device data from "http://groupware.les.inf.puc-rio.br/har", in order to predict the manner in which the test subjects performed a dumbbell lifting exercise. If the data from this document is used for any other research, please cite the preceding source because of generosity of data distribution.  
 
 The data includes Euler angles, accelerometer, gyroscope, and magnetometer readings. The variable to predict is "classe", (involving 1 correct exercise and 4 types of exercise mistakes), and ranges from A to E.  
 
@@ -80,7 +80,7 @@ predictionResult <- predict(model2, testing, type="class")
 predictionResult
 ```
 
-#### Summary:  
+#### Conclusion:  
 The machine learning algorithm with the highest accuracy is the Random Forest model with 99.6% accuracy, and a 0.39% Out of Sample Error Rate. However, the level of over fitting with the Random Forest prediction model might not scale for other data.  
 
-The inaccuracy of the predictions for Class B through E, demonstrates the difficulty of predicting partial and inaccurate dumbbell movements by the sensory apparatus chosen for data gathering, as analyzed by Machine Learning algorithms.  
+The inaccuracy of the predictions for Classes B through E, demonstrates the difficulty of predicting partial and inaccurate dumbbell movements by the sensory apparatus chosen for data gathering, as analyzed by Machine Learning algorithms.  

@@ -7,3 +7,4 @@
 
 * PML_Course_Project_Write_Up.Rmd
 * PML_Course_Project_Write_Up.html
+* http://johnakwei.github.io/Coursera/
