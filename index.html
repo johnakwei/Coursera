@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Machine Learning HTML Page by John Akwei, ECMp ERMp by johnakwei</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Machine Learning HTML Page by John Akwei, ECMp ERMp</h1>
+      <h2 class="project-tagline">Coursera Practical Machine Learning Course Project</h2>
+      <a href="https://github.com/johnakwei/Coursera" class="btn">View on GitHub</a>
+      <a href="https://github.com/johnakwei/Coursera/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/johnakwei/Coursera/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h2>
+<a id="machine-learning-of-qualitative-human-activity" class="anchor" href="#machine-learning-of-qualitative-human-activity" aria-hidden="true"><span class="octicon octicon-link"></span></a>Machine Learning of Qualitative Human Activity</h2>
+
+<h3>
+<a id="john-akwei-ecmp-ermp" class="anchor" href="#john-akwei-ecmp-ermp" aria-hidden="true"><span class="octicon octicon-link"></span></a>John Akwei, ECMp ERMp</h3>
+
+<h5>
+<a id="wednesday-april-15-2015" class="anchor" href="#wednesday-april-15-2015" aria-hidden="true"><span class="octicon octicon-link"></span></a>Wednesday, April 15, 2015</h5>
+
+<h4>
+<a id="synopsis" class="anchor" href="#synopsis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Synopsis:</h4>
+
+<p>This document incorporates the activity monitoring device data from "<a href="http://groupware.les.inf.puc-rio.br/har">http://groupware.les.inf.puc-rio.br/har</a>", in order to predict the manner in which the test subjects performed a dumbbell lifting exercise. If the data from this document is used for any other research, please cite the preceding source because of generousity of data distribution.  </p>
+
+<p>The data includes Euler angles, accelerometer, gyroscope, and magnetometer readings. The variable to predict is "classe", (involving 1 correct exercise and 4 types of exercise mistakes), and ranges from A to E.  </p>
+
+<p>Further information on the data in this document is at: "Velloso, E.; Bulling, A.; Gellersen, H.; Ugulino, W.; Fuks, H. Qualitative Activity Recognition of Weight Lifting Exercises. Proceedings of 4th International Conference in Cooperation with SIGCHI (Augmented Human '13) . Stuttgart, Germany: ACM SIGCHI, 2013."  </p>
+
+<p>The training data source is at "<a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv">https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv</a>". The test data source is at "<a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv">https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv</a>".  </p>
+
+<h4>
+<a id="required-packages" class="anchor" href="#required-packages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Required Packages:</h4>
+
+<p>setwd("C:/Users/johnakwei/Desktop/Coursera/PracticalMachineLearning/CourseProjectWriteUp")<br>
+if (!require("plyr")) { install.packages("plyr"); require("plyr") }<br>
+if (!require("caret")) { install.packages("caret"); require("caret") }<br>
+if (!require("rpart")) { install.packages("rpart"); require("rpart") }<br>
+if (!require("randomForest")) { install.packages("randomForest"); require("randomForest") }<br>
+if (!require("e1071")) { install.packages("e1071"); require("e1071") }  </p>
+
+<h4>
+<a id="data-input" class="anchor" href="#data-input" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data Input:</h4>
+
+<p>training &lt;- read.csv("pml-training.csv", na.strings=c("","NA","NULL"))<br>
+testing &lt;- read.csv("pml-testing.csv", na.strings=c("","NA","NULL"))  </p>
+
+<h4>
+<a id="data-cleaning" class="anchor" href="#data-cleaning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data Cleaning:</h4>
+
+<p>Data with values of "0", and irrelevant categories, are removed from the dataset:<br>
+training &lt;- training[, colSums(is.na(training))==0]<br>
+testing &lt;- testing[, colSums(is.na(testing))==0]<br>
+training &lt;- training[, c(8:60)]<br>
+testing &lt;- testing[, c(8:60)]  </p>
+
+<h4>
+<a id="cross-validation" class="anchor" href="#cross-validation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cross Validation:</h4>
+
+<p>The dataset is divided into 70% training data and 30% testing data:<br>
+inTrain &lt;- createDataPartition(y=training$classe, p=0.70, list=F)<br>
+train &lt;- training[inTrain,]<br>
+test &lt;- training[-inTrain,]  </p>
+
+<h4>
+<a id="plot-of-quantitive-data-gathering" class="anchor" href="#plot-of-quantitive-data-gathering" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plot of Quantitive Data Gathering:</h4>
+
+<p>plot(train$classe, col="orange", main="Plot of Quantity of Data by Data Class", xlab="Data Classes", ylab="Data Quantity")  </p>
+
+<p><img src="https://www.dropbox.com/s/p8n1dzzbnavi4q3/PMLplot.png?dl=0" alt="Plot of Quantitive Data Gathering">  </p>
+
+<h4>
+<a id="decision-tree-prediction-model" class="anchor" href="#decision-tree-prediction-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Decision Tree Prediction Model:</h4>
+
+<p>model &lt;- rpart(classe~., data=train, method="class")<br>
+prediction  &lt;- predict(model, test, type="class")<br>
+confusionMatrix(prediction, test$classe)  </p>
+
+<p>Confusion Matrix and Statistics<br>
+          Reference<br>
+Prediction    A    B    C    D    E<br>
+         A 1510  203   55  115   34<br>
+         B   52  615   56   64   79<br>
+         C   44   90  782  145  127<br>
+         D   44   91   69  517   47<br>
+         E   24  140   64  123  795  </p>
+
+<p>Overall Statistics:<br>
+               Accuracy : 0.7169<br>
+               95% CI : (0.7052, 0.7284)<br>
+    No Information Rate : 0.2845<br>
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16  </p>
+
+<pre><code>              Kappa : 0.6401  
+</code></pre>
+
+<p>Mcnemar's Test P-Value : &lt; 2.2e-16  </p>
+
+<p>Statistics by Class:<br>
+                     Class: A Class: B Class: C Class: D Class: E<br>
+Sensitivity            0.9020   0.5399   0.7622  0.53631   0.7348<br>
+Specificity            0.9033   0.9471   0.9164  0.94899   0.9269<br>
+Pos Pred Value         0.7877   0.7102   0.6582  0.67318   0.6937<br>
+Neg Pred Value         0.9587   0.8956   0.9481  0.91264   0.9394<br>
+Prevalence             0.2845   0.1935   0.1743  0.16381   0.1839<br>
+Detection Rate         0.2566   0.1045   0.1329  0.08785   0.1351<br>
+Detection Prevalence   0.3257   0.1472   0.2019  0.13050   0.1947<br>
+Balanced Accuracy      0.9027   0.7435   0.8393  0.74265   0.8308  </p>
+
+<h4>
+<a id="random-forest-prediction-model" class="anchor" href="#random-forest-prediction-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Random Forest Prediction Model:</h4>
+
+<p>model2 &lt;- randomForest(classe~., data=train, na.action=na.omit)<br>
+prediction2 &lt;- predict(model2, test, type="class")<br>
+result2 &lt;- confusionMatrix(prediction2, test$classe)<br>
+result2  </p>
+
+<p>Confusion Matrix and Statistics<br>
+          Reference<br>
+Prediction    A    B    C    D    E<br>
+         A 1674    6    0    0    0<br>
+         B    0 1132    3    0    0<br>
+         C    0    1 1022    5    0<br>
+         D    0    0    1  958    2<br>
+         E    0    0    0    1 1080  </p>
+
+<p>Overall Statistics:<br>
+               Accuracy : 0.9968<br>
+                 95% CI : (0.995, 0.9981)<br>
+    No Information Rate : 0.2845<br>
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16  </p>
+
+<pre><code>              Kappa : 0.9959  
+</code></pre>
+
+<p>Mcnemar's Test P-Value : NA  </p>
+
+<p>Statistics by Class:<br>
+                     Class: A Class: B Class: C Class: D Class: E<br>
+Sensitivity            1.0000   0.9939   0.9961   0.9938   0.9982<br>
+Specificity            0.9986   0.9994   0.9988   0.9994   0.9998<br>
+Pos Pred Value         0.9964   0.9974   0.9942   0.9969   0.9991<br>
+Neg Pred Value         1.0000   0.9985   0.9992   0.9988   0.9996<br>
+Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839<br>
+Detection Rate         0.2845   0.1924   0.1737   0.1628   0.1835<br>
+Detection Prevalence   0.2855   0.1929   0.1747   0.1633   0.1837<br>
+Balanced Accuracy      0.9993   0.9966   0.9974   0.9966   0.9990  </p>
+
+<h4>
+<a id="expected-out-of-sample-error-rate" class="anchor" href="#expected-out-of-sample-error-rate" aria-hidden="true"><span class="octicon octicon-link"></span></a>Expected Out-Of-Sample Error Rate:</h4>
+
+<p>OutErrorRate &lt;- 1 - result2[["overall"]][["Accuracy"]]<br>
+OutErrorRate  </p>
+
+<p>[1] 0.003228547  </p>
+
+<h4>
+<a id="output-files" class="anchor" href="#output-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Output files:</h4>
+
+<p>The output files chosen were from the Random Forest algorithm:<br>
+predictionResult &lt;- predict(model2, testing, type="class")<br>
+predictionResult  </p>
+
+<p>1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20<br>
+B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B<br>
+Levels: A B C D E  </p>
+
+<h4>
+<a id="conclusion" class="anchor" href="#conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conclusion:</h4>
+
+<p>The machine learning algorithm with the highest accuracy is the Random Forest model with 99.6% accuracy, and a 0.39% Out of Sample Error Rate. However, the level of over fitting with the Random Forest prediction model might not scale for other data.  </p>
+
+<p>The inaccuracy of the predictions for Classes B through E, demonstrates the difficulty of predicting partial and inaccurate dumbbell movements by the sensory apparatus chosen for data gathering, as analyzed by Machine Learning algorithms.  </p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/johnakwei/Coursera">Machine Learning HTML Page by John Akwei, ECMp ERMp</a> is maintained by <a href="https://github.com/johnakwei">johnakwei</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
