@@ -6,7 +6,7 @@ output: html_document
 ---  
 
 #### Synopsis:  
-This document incorporates the activity monitoring device data from  "http://groupware.les.inf.puc-rio.br/har", in order to predict the manner in which the test subjects performed a dumbbell lifting exercise. If the data from this document is used for any other research, please cite the preceding source because of generousity of data distribution.  
+This document incorporates the activity monitoring device data from "http://groupware.les.inf.puc-rio.br/har", in order to predict the manner in which the test subjects performed a dumbbell lifting exercise. If the data from this document is used for any other research, please cite the preceding source because of generousity of data distribution.  
 
 The data includes Euler angles, accelerometer, gyroscope, and magnetometer readings. The variable to predict is "classe", (involving 1 correct exercise and 4 types of exercise mistakes), and ranges from A to E.  
 
@@ -14,11 +14,12 @@ Further information on the data in this document is at: "Velloso, E.; Bulling, A
 
 The training data source is at "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv". The test data source is at "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv".  
 
+#### Required Packages:  
 ```{r, message=F, warning=F}
 #setwd("C:/Users/johnakwei/Desktop/Coursera/PracticalMachineLearning/CourseProjectWriteUp")
-if (!require("ggplot2")) { install.packages("ggplot2"); require("ggplot2") }
 if (!require("plyr")) { install.packages("plyr"); require("plyr") }
 if (!require("caret")) { install.packages("caret"); require("caret") }
+if (!require("rpart")) { install.packages("rpart"); require("rpart") }
 if (!require("randomForest")) { install.packages("randomForest"); require("randomForest") }
 if (!require("e1071")) { install.packages("e1071"); require("e1071") }
 ```
@@ -30,37 +31,49 @@ testing <- read.csv("pml-testing.csv", na.strings=c("","NA","NULL"))
 ```
 
 #### Data Cleaning:  
+Data with values of "0", and irrelevant categories, are removed from the dataset:  
 ```{r}
 training <- training[, colSums(is.na(training))==0]
 testing <- testing[, colSums(is.na(testing))==0]
-training <- training[, c(7:60)]
-testing <- testing[, c(7:60)]
+training <- training[, c(8:60)]
+testing <- testing[, c(8:60)]
 ```
 
-#### Cross Validation
+#### Cross Validation:  
+The dataset is divided into 70% training data and 30% testing data:  
 ```{r, cache=T}
 inTrain <- createDataPartition(y=training$classe, p=0.70, list=F)
 train <- training[inTrain,]
 test <- training[-inTrain,]
-model <- train(classe ~., data=train, method="rf", prox=T, 
-trControl=trainControl(method="cv", number=4, allowParallel=T))
-model
 ```
 
-#### Confusion Matrixes and Expected Out-Of-Sample error:  
+#### Plot of Quantitive Data Gathering:  
 ```{r}
-testPrediction <- predict(model, test)
-confusionMatrix(testPrediction, test$classe)
+plot(train$classe, col="orange", main="Plot of Quantity of Data by Data Class", xlab="Data Classes", ylab="Data Quantity")
+```
+
+#### Decision Tree Prediction Model:  
+```{r}
+model <- rpart(classe~., data=train, method="class")
+prediction  <- predict(model, test, type="class")
+confusionMatrix(prediction, test$classe)
+```
+
+#### Random Forest Prediction Model:  
+```{r, cache=T}
+model2 <- randomForest(classe~., data=train, na.action=na.omit)
+prediction2 <- predict(model2, test, type="class")
+confusionMatrix(prediction2, test$classe)
 ```
 
 #### Output files:  
+The output files chosen were from the Random Forest algorithm:  
 ```{r}
-predictionTesting <- predict(model, testing)
-predictionTesting <- as.character(predictionTesting)
-predictionTesting
+predictionResult <- predict(model2, testing, type="class")
+predictionResult
 ```
 
 #### Summary:  
-The accuracy of the model is 0.9964, and proves the accuracy of the machine learning algorithm. The out of sample error is 0.0056. However, the level of fitting accomplished with the Random Forest prediction model might not scale for other data.  
+The machine learning algorithm with the highest accuracy is the Random Forest model with 99.6% accuracy. However, the level of fitting accomplished with the Random Forest prediction model might not scale for other data.  
 
-The machine learning predictions in this document demonstrate the difficulty of predicting partial, (halfway), dumbbell movements by the sensory apparatus chosen for data gathering.  
+The inaccuracy of the predictions for Class B through E, demonstrates the difficulty of predicting partial and inaccurate dumbbell movements by the sensory apparatus chosen for data gathering, as analyzed by Machine Learning algorithms.  
