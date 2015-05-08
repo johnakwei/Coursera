@@ -1,0 +1,71 @@
+---
+title: "Community Health Trends Data Application"
+author: "John Akwei, ECMp ERMp"
+date: "Thursday, May 07, 2015"
+output: html_document
+---
+
+### Developing Data Products Project
+This is the documentation of my Data Product for the Data Science Specialization course from Johns Hopkins University, and Coursera:
+
+1) Shiny application at http://johnakwei1.shinyapps.io/"Community-Health-Trends".
+2) Documentation of the application, located at the application page.
+3) The server.R and ui.R code at this github repository.
+4) A 5-page R Presentation pitch for the app, (w/ embedded code). Location: www.rpubs.com/johnakwei.
+
+#### My Data Product
+The project is titled "Community Health Trends".
+
+The application gives community information about local health trends over time, in order to determine if policies are needed to counter adverse health trends, or to determine the effectiveness of policies currently in place, or to determine if the traditional health status of the community is in need of any policy changes.
+
+(Inclue prediction functions)
+
+#### Source of the Data
+The data is from "Community Health Status Indicators (CHSI) to Combat Obesity, Heart Disease and Cancer", located at "http://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer".
+
+Community Health Status Indicators (CHSI) to combat obesity, heart disease, and cancer are major components of the Community Health Data Initiative. This dataset provides key health indicators for local communities and encourages dialogue about actions that can be taken to improve community health (e.g., obesity, heart disease, cancer). The CHSI report and dataset was designed not only for public health professionals but also for members of the community who are interested in the health of their community. The CHSI report contains over 200 measures for each of the 3,141 United States counties. Although CHSI presents indicators like deaths due to heart disease and cancer, it is imperative to understand that behavioral factors such as obesity, tobacco use, diet, physical activity, alcohol and drug use, sexual behavior and others substantially contribute to these deaths.
+
+#### User Instructions
+Menu #1 allows for selection of State.
+Menu #2 allows for selection of County.
+Menu #3 allows for selction of Health Category.
+The downloaded files were in .xls and .csv formats.
+
+The app has two panels:
+
+
+#### Application Source Code
+The Shiny app consists of R code in two files:
+ui.R
+server.R
+
+#### Application License
+The source code for this application is for general public use.
+Public: This dataset is intended for public access and use.
+License: License Not Specified
+
+```{r}
+# Working Directory
+# C:/Users/johnakwei/Desktop/Coursera/DevelopingDataProducts/CourseProject
+# 
+# # Data download and extraction
+# unextracted <- "chsi_dataset.zip"
+# extracted  <- "CHSI DataSet.xls"
+# dataLocation <- "ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/CHDI/chsi_dataset.zip"
+# if (!file.exists(unextracted)) { download.file(dataLocation, unextracted) }
+# if (!file.exists(extracted)) { unzip(unextracted) }
+
+descriptions <- read.csv("chsi_dataset/DATAELEMENTDESCRIPTION.csv")
+healthyPeople2010 <- read.csv("chsi_dataset/HEALTHYPEOPLE2010.csv")
+head(healthyPeople2010, 1)
+names(healthyPeople2010)
+healthyPeople2010$Elements[1]
+plot(healthyPeople2010$Elements[1])
+plot(healthyPeople2010$Elements, healthyPeople2010$US_Pct_or_Rate_2003)
+library(ggplot2)
+ggplot(healthyPeople2010, aes(healthyPeople2010$Elements~Emissions~healthyPeople2010$US_Pct_or_Rate_2003)) +
+  stat_summary(geom="line", fun.y="sum") + 
+  xlab("Year") +
+  ylab("Health Category") +
+  ggtitle("Heath Category Trends")
+```
