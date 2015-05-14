@@ -1,115 +1,38 @@
-# library(shiny)
-# shinyUI(pageWithSidebar(
-#   headerPanel("Data Science FTW!"),
-#   sidebarPanel(
-#     h3('Sidebar text')
-#   ),
-#   mainPanel(
-#     h3('Main Panel text')
-#   )
-# ))
-
-# library(shiny)
-# shinyUI(pageWithSidebar(
-#   headerPanel("Illustrating Markup"),
-#   sidebarPanel(
-#     h1('Sidebar panel'),
-#     h1('H1 text'),
-#     h2('H2 text'),
-#     h3('H3 text'),
-#     h4('H4 text')
-#     ),
-#   mainPanel(
-#     h3('Main Panel text'),
-#     code('Some Code'),
-#     p('Some ordinary text')
-#   )
-# ))
-
-# library(shiny)
-# shinyUI(pageWithSidebar(
-#   headerPanel("Illustrating Inputs"),
-#   sidebarPanel(
-#     numericInput('id1','Numeric input, labeled id1', 0, min=0, max=10, step=1),
-#     checkboxGroupInput("id2", "Checkbox",
-#                        c("Value 1" = "1",
-#                          "Value 2" = "2",
-#                          "Value 3" = "3")),
-#     dateInput("date", "Date:")
-#   ),
-#   mainPanel(
-#     h3('Illustrating outputs'),
-#     h4('You entered'),
-#     verbatimTextOutput("oid1"),
-#     h4('You entered'),
-#     verbatimTextOutput("oid2"),
-#     h4('You entered'),
-#     verbatimTextOutput("odate")
-#   )
-# ))
-
-# shinyUI(
-#   pageWithSidebar(
-#     # Application title
-#     headerPanel("Diabetes prediction"),
-#     
-#     sidebarPanel(
-#       numericInput('glucose', 'Glucose mg/dl', 90, min = 50, max = 200, step = 5),
-#       submitButton('Submit')
-#     ),
-#     mainPanel(
-#       h3('Results of prediction'),
-#       h4('You entered'),
-#       verbatimTextOutput("inputValue"),
-#       h4('Which resulted in a prediction of '),
-#       verbatimTextOutput("prediction")
-#     )
-#   )
-# )
+library(shiny)
 
 shinyUI(pageWithSidebar(
-  headerPanel("Example plot"),
+  headerPanel("Community Demographic Health Status"),
   sidebarPanel(
-    sliderInput('mu', 'Guess at the mean',value = 70, min = 62, max = 74, step = 0.05,)
-  ),
+    selectInput("State", label=h5("Select State"), 
+                choices=CountyState$CHSI_State_Name, selected=1),
+    uiOutput("countySelector")
+    ),
   mainPanel(
-    plotOutput('newHist')
-  )
-))
-
-# shinyUI(pageWithSidebar(
-#   headerPanel("Hello Shiny!"),
-#   sidebarPanel(
-#     textInput(inputId="text1", label = "Input Text1"),
-#     textInput(inputId="text2", label = "Input Text2")
-#   ),
-#   mainPanel(
-#     p('Output text1'),
-#     textOutput('text1'),
-#     p('Output text2'),
-#     textOutput('text2'),
-#     p('Output text3'),
-#     textOutput('text3'),
-#     p('Outside text'),
-#     textOutput('text4'),
-#     p('Inside text, but non-reactive'),
-#     textOutput('text5')
-#   )
-# ))
-
-# shinyUI(pageWithSidebar(
-#   headerPanel("Hello Shiny!"),
-#   sidebarPanel(
-#     textInput(inputId="text1", label = "Input Text1"),
-#     textInput(inputId="text2", label = "Input Text2"),
-#     actionButton("goButton", "Go!")
-#   ),
-#   mainPanel(
-#     p('Output text1'),
-#     textOutput('text1'),
-#     p('Output text2'),
-#     textOutput('text2'),
-#     p('Output text3'),
-#     textOutput('text3')
-#   )
-# ))
+    p("This application gives Communities information on how local ", 
+      "policies are affecting local health risks. Thereby, allowing ",
+      "local officials, and voters, to determine if services ",
+      "to improve local health are affective."),
+      
+    p("Select State and County to display Population Density, a graph of ",
+      "County Demographics, an assessment of Population Density and Poverty Rate ",
+      "of the selected County, and graphs of local health risk levels, ",
+      "average State health risk levels, and average USA health risk levels."),
+    h2('County Demographics'),
+    h4('For:'),
+    textOutput('text9'),
+    textOutput('text10'),
+    h4('Population Density:'),
+    textOutput('text1'),
+    h2('County Demographics Chart'),
+    plotOutput("demoHist"),
+    h2("County Demographics Assessment:"),
+    textOutput('text2'),
+    textOutput('text3'),
+    h2('Risk Factors Comparison Charts'),
+    plotOutput("newHist"),
+    plotOutput("StateHist"),
+    plotOutput("USAHist"),
+    # Create links to ui.R and Server.R on GitHub
+    helpText(HTML("User Interface Source Code: <a href = \"https://github.com/johnakwei/Coursera/blob/Coursera/Developing_Data_Products/ui.R\">ui.R</a>")),
+    helpText(HTML("Server Script Source Code: <a href = \"https://github.com/johnakwei/Coursera/blob/Coursera/Developing_Data_Products/server.R\">server.R</a>"))
+  )))

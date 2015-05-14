@@ -1,0 +1,64 @@
+Community Demographic Health Status
+========================================================
+author: authored by John Akwei, ECMp ERMp
+date: 5-14-2015
+transition: rotate
+
+Community Demographic Health Status
+========================================================
+An application that gives Communities information about local health risks, in order to determine:
+
+- if policies are needed to counter an adverse health risks assessment
+- the effectiveness of policies currently in place
+- if current health policies of the community are in need of any policy changes
+
+The Community Demographic Health Status application is found at:
+https://johnakwei1.shinyapps.io/CourseProject
+
+Application User Interface
+========================================================
+The application user selects the State and County.
+
+Then the application displays:
+
+- Population Density
+- a graph of County Demographics
+- an assessment of County Population Density and Poverty Rate
+- graphs of local health risk levels, average State health risk levels, and average USA health risk levels.
+
+Data Overview
+========================================================
+The data is from "Community Health Status Indicators (CHSI) to Combat Obesity, Heart Disease and Cancer", located at "http://catalog.data.gov/dataset/community-health-status-indicators-chsi-to-combat-obesity-heart-disease-and-cancer".
+
+```{r, echo=F}
+dt <- read.csv("chsi_dataset/RISKFACTORSANDACCESSTOCARENA.csv")
+CountyState <- dt[3:4]
+CountyState[] <- lapply(CountyState, as.character)
+RiskFactors <- cbind(dt[7], dt[10], dt[13], dt[16], dt[19], dt[22])
+CountyState <- cbind(CountyState, RiskFactors)
+rm(dt)
+rm(RiskFactors)
+dt2 <- read.csv("chsi_dataset/DEMOGRAPHICS.csv")
+dt2Columns <- cbind(dt2[12], dt2[15], dt2[30], dt2[33], dt2[36], dt2[39], dt2[42])
+rm(dt2)
+CountyState <- cbind(CountyState, dt2Columns)
+rm(dt2Columns)
+head(CountyState[1:15], 1)
+```
+
+Community Demographic Health Status
+========================================================
+The Community Demographic Health Status application is provided free for
+communities in the USA to use:
+https://johnakwei1.shinyapps.io/CourseProject
+
+```{r, echo=FALSE}
+library(shiny)
+CountyDemographics <- subset(CountyState,
+CountyState$CHSI_State_Name=="Maine" &
+CountyState$CHSI_County_Name=="Lincoln")
+barplot(as.matrix(CountyDemographics[1, 3:8]),
+col="orange", main="County Health Risk Factors",
+xlab="Risk Factors Categories", ylab="Risk Factors Level")
+```
+
