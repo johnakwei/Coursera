@@ -1,5 +1,5 @@
 ---
-title: "Community Demographic Health Rating"
+title: "Community Demographic Health Status"
 author: "John Akwei, ECMp ERMp"
 date: "Thursday, May 07, 2015"
 output: html_document
@@ -14,7 +14,7 @@ This is the documentation of my Data Product for the Data Science Specialization
 4) A 5-page R Presentation pitch for the app, (w/ embedded code). Location: www.rpubs.com/johnakwei.
 
 #### My Data Product
-The project is titled "Community Demographic Health Rating".
+The project is titled "Community Demographic Health Status".
 
 The application gives Communities information about local health risks in order to determine if policies are needed to counter an adverse health risks assessment, or to determine the effectiveness of policies currently in place, or to determine if the traditional health risks status of the community is in need of any policy changes.
 
