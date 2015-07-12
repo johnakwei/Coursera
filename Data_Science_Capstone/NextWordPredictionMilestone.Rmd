@@ -1,0 +1,196 @@
+---
+title: "Next Word Prediction App - Milestone Report"
+author: "John Akwei"
+date: "Wednesday, July 08, 2015"
+output: html_document
+---
+
+# Synopsis  
+The goal of the project is to build a model that can predict the next word given an input word/sentence fragment. This report examines the three sets of writing samples and performs some explorary analysis on them. Some 1-gram (one word at a time) to 3-gram (grouping into 3 word phrases) models are briefly examined on the samples of the datasets. For the next step, a 1-gram to n-gram model using all the text datasets will be built to predict the next word given a phrase is enetered.
+
+We analyse three corpora of US English text found online. We find that the blogs and news corpora are similar, the twitter corpus is different. We propose that this is the result of the 140 character limit of Twitter messages.
+
+In this report we look at three corpora of US English text, a set of internet blogs posts, a set of internet news articles, and a set of twitter messages.
+
+For our analysis we use the R computing environment, as well as the libraries stringi  and ggplot2. In order to make the code more readable we use the pipe operator from the magrittr library. This report is compiled using the rmarkdown library. Finally during writing we used the RStudio IDE.
+
+Data Processing
+Introduction
+Around the world, people are spending an increasing amount of time on their mobile devices for email, social networking, banking and a whole range of other activities. To facilitate typing on mobile devices, SwiftKey, our corporate partner in this capstone project, builds a smart keyboard that makes it easier for people to type on their mobile devices. One cornerstone of their smart keyboard is predictive text models.
+
+# Required R language libraries  
+```{r, message=F, warning=F}
+if (!require("data.table")) {install.packages("data.table"); require("data.table")}
+if (!require("reshape2")) {install.packages("reshape2"); require("reshape2")}
+if (!require("stylo")) {install.packages("stylo"); require("stylo")}
+if (!require("tm")) {install.packages("tm"); require("tm")}
+if (!require("stringr")) {install.packages("stringr"); require("stringr")}
+if (!require("stringi")) {install.packages("stringi"); require("stringi")}
+if (!require("wordcloud")) {install.packages("wordcloud"); require("wordcloud")}
+if (!require("slam")) {install.packages("slam"); require("slam")}
+if (!require("RWeka")) {install.packages("RWeka"); require("RWeka")}
+if (!require("ggplot2")) {install.packages("ggplot2"); require("ggplot2")}
+
+library(data.table)
+library(reshape2)
+library(stylo)
+library(tm)
+library(stringr)
+library(stringi)
+library(wordcloud)
+library(slam)
+library(RWeka)
+library(ggplot2)
+```
+
+# Data Acquistion  
+#### Source of Corpus files for Natural Language Processing  
+http://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip
+
+#### Import the blog, news, and twitter datasets  
+```{r}
+blogs <- readLines("Coursera-SwiftKey/final/en_US/en_US.blogs.txt", encoding="UTF-8", 10)
+news <- readLines("Coursera-SwiftKey/final/en_US/en_US.news.txt", encoding="UTF-8", 10)
+twitter <- readLines("Coursera-SwiftKey/final/en_US/en_US.twitter.txt", encoding="UTF-8", 10)
+```
+
+# Optimization of the NLP Dataset via Tokenization  
+#### Data optimization: Remove whitespace, punctuation and numbers. Convert to lower case. Tokenization and Profanity Filtering.  
+```{r, eval=F}
+textOptimal <- function(corpus){
+  cleanText <- removePunctuation(corpus)
+  cleanText <- removeNumbers(cleanText)
+  cleanText <- str_replace_all(cleanText, "[^[:alnum:]]", " ")
+  cleanText <- stripWhitespace(cleanText)
+  cleanText <- tolower(cleanText)
+  return(cleanText) }
+
+blogOptimal <- textOptimal(blogs)
+print("Optimized line from blogs dataset:")
+blogOptimal[1]
+newsOptimal <- textOptimal(news)
+print("Optimized line from news dataset:")
+newsOptimal[1]
+twitterOptimal <- textOptimal(twitter)
+print("Optimized line from twitter dataset:")
+twitterOptimal[1]
+
+# Profanity Filtering
+conprofane <- file("./profanity.txt", "r")
+profanity_vector <- VectorSource(readLines(conprofane))
+corpus <- tm_map(corpus, removeWords, profanity_vector)
+```
+
+### Exploratory Data Analysis of Blogs dataset  
+```{r, echo=F, message=F, warning=F}
+print(paste("File Size for blogs dataset:", file.info("Coursera-SwiftKey/final/en_US/en_US.blogs.txt")$size / 1024^2))
+print(paste("Lines in blogs dataset:", stri_stats_general(blogs)[1]))
+print(paste("Empty lines in blogs dataset:", stri_stats_general(blogs)[2]))
+print(paste("Characters in blogs dataset:", stri_stats_general(blogs)[3]))
+print(paste("Blank Spaces in blogs dataset:", stri_stats_general(blogs)[4]))
+words_blogs <- stri_count_words(blogs)
+print(paste("Summary of blogs dataset word count:"))
+summary(words_blogs)
+print(paste("Word Cloud for blogs dataset:"))
+wordcloud(blogs)
+print(paste("Plot of blogs dataset:"))
+qplot(words_blogs)
+```
+
+### Exploratory Data Analysis of News dataset  
+```{r, echo=F, message=F, warning=F}
+print(paste("File Size for news dataset:", file.info("Coursera-SwiftKey/final/en_US/en_US.news.txt")$size / 1024^2))
+print(paste("Lines in news dataset:", stri_stats_general(news)[1]))
+print(paste("Empty lines in news dataset:", stri_stats_general(news)[2]))
+print(paste("Characters in news dataset:", stri_stats_general(news)[3]))
+print(paste("Blank Spaces in news dataset:", stri_stats_general(news)[4]))
+words_news <- stri_count_words(news)
+print(paste("Summary of news dataset word count:"))
+summary(words_news)
+print(paste("Word Cloud for news dataset:"))
+wordcloud(news)
+print(paste("Plot of news dataset:"))
+qplot(words_news)
+```
+
+### Exploratory Data Analysis of Twitter dataset  
+```{r, echo=F, message=F, warning=F}
+print(paste("File Size for twitter dataset:", file.info("Coursera-SwiftKey/final/en_US/en_US.twitter.txt")$size / 1024^2))
+print(paste("Lines in twitter dataset:", stri_stats_general(twitter)[1]))
+print(paste("Empty lines in twitter dataset:", stri_stats_general(twitter)[2]))
+print(paste("Characters in twitter dataset:", stri_stats_general(twitter)[3]))
+print(paste("Blank Spaces in twitter dataset:", stri_stats_general(twitter)[4]))
+words_twitter <- stri_count_words(twitter)
+print(paste("Summary of twitter dataset word count:"))
+summary(words_twitter)
+print(paste("Word Cloud for twitter dataset:"))
+wordcloud(twitter)
+print(paste("Plot of twitter dataset:"))
+qplot(words_twitter)
+```
+
+As we can see from above that the total lines of blogs.txt, news.txt and twitter.txt are 899288, 1010242 and 2360148 respectively.
+
+Data sampling: Determine frequently used words to reduce data size, then transform the ngams data into data frames, and count the frequency of the words.
+In each sample, the top 20 most frequent words/phrases are selected.
+
+Exploratory analysis of the most frequent words/phrases in each file
+Text modelling: N-Gram modeling of the full text data sets
+Text prediction: Optimize model for low memory utilization
+
+# Most Freqently Used Word
+In this section, I would like to look for the most frequently used word from the data files.
+
+get most frequent word
+```{r, eval=F}
+mfw = sort(table(words), decreasing=TRUE)
+totalUniqueWords = length(names(mfw))
+top20 = head(mfw, 20)
+barplot(top20, border=NA, las=2, main="Top 20 Most Frequent Word", cex.main=1)
+```
+
+The most frequently used word from the three text files is the. The above histogram shows the top 20 most frequently used word in the data.
+
+# Ngram Analysis
+In Natural Language Processing (NLP) an n-gram is a contiguous sequence of n items from a given sequence of text or speech.
+
+The following function is used to extract 1-grams, 2-grams and 2-grams from the cleaned text corpus.
+```{r, eval=F}
+ngramTokenizer <- function(theCorpus, ngramCount) {
+        ngramFunction <- NGramTokenizer(theCorpus, 
+                                Weka_control(min = ngramCount, max = ngramCount, 
+                                delimiters = " \\r\\n\\t.,;:\"()?!"))
+        ngramFunction <- data.frame(table(ngramFunction))
+        ngramFunction <- ngramFunction[order(ngramFunction$Freq, 
+                                             decreasing = TRUE),][1:10,]
+        colnames(ngramFunction) <- c("String","Count")
+        ngramFunction
+}
+```
+By the usage of the tokenizer function for the n-grams a distribution of the following top 10 words and word combinations can be inspected. Unigrams are single words, while bigrams are two word combinations and trigrams are three word combinations.
+
+# Interesting Findings About the Data Sets
+Exponential Decline in N-gram Usefulness. Majority of the n-grams seem to have a frequency count of 1. The problem gets worse, as the n-gram size increases. I guess this kind of makes sense, because the longer a n-gram gets, the harder it is to have high frequencies of repetitions. One implication is that frequency table entries with a frequency of 1 should be eliminated, because they are just noise.
+
+Algorithms for dealing with large data sets are different. Code which initially seemed rather simple, ended up being completely rewritten when the system ran out of memory. This serves as a good introduction to the real world big data problems out there. Remember to write code with scalability in mind right from the beginning, especially if you know upfront that the data volume will be huge!
+
+# Future Plan
+The next task I would like to do is to:
+Read the materials about NLP to learn how to create a feasible prediction models for N-grams
+Create/fine-tune the prediction model
+Test the prediction model, Repeat Step 4 until the performance is acceptable
+
+# Summary  
+We analyse three corpora of US english text. The file sizes are around 200 MegaBytes (MBs) per file.
+
+We find that the blogs and news corpora consist of about 1 million items each, and the twitter* corpus consist of over 2 million items. Twitter messages have a character limit of 140 (with exceptions for links), this explains why there are some many more items for a corpus of about the same size.
+
+This result is further supported by the fact that the number of characters is similar for all three corpora (around 200 million each).
+
+Finally we find that the frequency distributions of the blogs and news corpora are similar (appearing to be log-normal). The frequency distribution of the twitter corpus is again different, as a result of the character limit.
+
+# References
+http://www.corpora.heliohost.org/aboutcorpus.html
+http://cran.r-project.org/web/packages/tm/index.html
+http://www.telegraph.co.uk/technology/internet/8207621/English-language-has-doubled-in-size-in-the-last-century.html
+https://dev.twitter.com/overview/api/counting-characters
