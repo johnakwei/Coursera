@@ -4,7 +4,7 @@ library(stringr)
 library(stringi)
 load("NgramTable.RData")
 
-# Creation of tb4_2.RData Code
+# Creation of NgramTable.RData Code
 # c1 <- file("Coursera-SwiftKey/final/en_US/en_US.twitter.txt","r")
 # f1 <- readLines(c1, 3000)
 # close(c1)
@@ -39,11 +39,11 @@ NextWordPrediction <- function(n,ipt){
   else {ipt <- c(NA, NA, ipt)}
   
   # subset the prediction column with text input matching
-  pt <- as.character(tb4[tb4$n1==ipt[1] & tb4$n2==ipt[2] & tb4$n3==ipt[3],][1,]$pred)
+  pt <- as.character(NxtWrd[NxtWrd$n1==ipt[1] & NxtWrd$n2==ipt[2] & NxtWrd$n3==ipt[3],][1,]$pred)
   
   if(is.na(pt)){
-    pt <- as.character(tb4[tb4$n2==ipt[2] & tb4$n3==ipt[3],][1,]$pred)
-    if(is.na(pt)){pt <- as.character(tb4[tb4$n3==ipt[3],][1,]$pred)}}
+    pt <- as.character(NxtWrd[NxtWrd$n2==ipt[2] & NxtWrd$n3==ipt[3],][1,]$pred)
+    if(is.na(pt)){pt <- as.character(NxtWrd[NxtWrd$n3==ipt[3],][1,]$pred)}}
   
   #return matching prediction unigram
   print(pt)}
