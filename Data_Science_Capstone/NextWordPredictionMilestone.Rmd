@@ -138,23 +138,21 @@ Exploratory analysis of the most frequent words/phrases in each file
 Text modelling: N-Gram modeling of the full text data sets
 Text prediction: Optimize model for low memory utilization
 
-# Most Freqently Used Word
-In this section, I would like to look for the most frequently used word from the data files.
-
-get most frequent word
-```{r, eval=F}
-mfw = sort(table(words), decreasing=TRUE)
-totalUniqueWords = length(names(mfw))
-top20 = head(mfw, 20)
-barplot(top20, border=NA, las=2, main="Top 20 Most Frequent Word", cex.main=1)
-```
-
-The most frequently used word from the three text files is the. The above histogram shows the top 20 most frequently used word in the data.
-
 # Ngram Analysis
 In Natural Language Processing (NLP) an n-gram is a contiguous sequence of n items from a given sequence of text or speech.
 
 The following function is used to extract 1-grams, 2-grams and 2-grams from the cleaned text corpus.
+
+```{r, message=F, warning=F}
+load("NgramTable.RData")
+ggplot (data=head(tb4), aes(x=n1, y=Freq, color=n1)) +
+geom_point() +
+stat_summary (fun.y=mean, geom="line", size=1, aes(color=n1)) +
+stat_summary (fun.y=mean, geom="line", size=1, colour="black") +
+labs (color="Ngram", x="Unigrams", y="Frequency",
+title="Ngram Data Table")
+```
+
 ```{r, eval=F}
 ngramTokenizer <- function(theCorpus, ngramCount) {
         ngramFunction <- NGramTokenizer(theCorpus, 
@@ -168,6 +166,19 @@ ngramTokenizer <- function(theCorpus, ngramCount) {
 }
 ```
 By the usage of the tokenizer function for the n-grams a distribution of the following top 10 words and word combinations can be inspected. Unigrams are single words, while bigrams are two word combinations and trigrams are three word combinations.
+
+# Most Freqently Used Word
+In this section, I would like to look for the most frequently used word from the data files.
+
+get most frequent word
+```{r, eval=F}
+mfw = sort(table(words), decreasing=TRUE)
+totalUniqueWords = length(names(mfw))
+top20 = head(mfw, 20)
+barplot(top20, border=NA, las=2, main="Top 20 Most Frequent Word", cex.main=1)
+```
+
+The most frequently used word from the three text files is the. The above histogram shows the top 20 most frequently used word in the data.
 
 # Interesting Findings About the Data Sets
 Exponential Decline in N-gram Usefulness. Majority of the n-grams seem to have a frequency count of 1. The problem gets worse, as the n-gram size increases. I guess this kind of makes sense, because the longer a n-gram gets, the harder it is to have high frequencies of repetitions. One implication is that frequency table entries with a frequency of 1 should be eliminated, because they are just noise.

@@ -821,3 +821,21 @@ Where NW is Next Word and PWx are Previous Words with x=1,2. The Naive part of t
 #                   align="center"),
 #                   tags$br())))
 # End ui.R
+
+
+# shinyUI(navbarPage("Data Science Capstone Project",
+#           tabPanel("Next Word Prediction App",
+#                 sidebarLayout(
+#                   sidebarPanel(
+#                     textInput("text", label=h3("Text Input:"), value="Enter your text here...")
+#                               ),
+#                               
+#                   mainPanel(
+#                     h4('Text Entered:'),
+#                     verbatimTextOutput("value"),
+#                     h4('Next Word:'),
+#                     verbatimTextOutput("prediction"))
+#                     )),
+#           tabPanel("Graphs", wordcloud("prediction")),         
+       tabPanel("Information",includeMarkdown("Information.Rmd"))
+# ))
