@@ -2,23 +2,19 @@ library(stylo)
 library(tm)
 library(stringr)
 library(stringi)
-load("NgramTable.RData")
+library(data.table)
+# load("NgramTable.RData")
+load("TrigramTable.RData")
+# Change trigramPred to trigramPred
 
-# Creation of NgramTable.RData Code
-# c1 <- file("Coursera-SwiftKey/final/en_US/en_US.twitter.txt","r")
-# f1 <- readLines(c1, 3000)
-# close(c1)
-# c2 <- file("Coursera-SwiftKey/final/en_US/en_US.blogs.txt","r")
-# f2 <- readLines(c2, 1000)
-# close(c2)
-# c3 <- file("Coursera-SwiftKey/final/en_US/en_US.news.txt","r")
-# f3 <- readLines(c3, 1000)
-# close(c3)
-# table1 <- c(f1, f2, f3)
-# save(table1, file="table1.RData")
+ 
+# Profanity Filtering
+# conprofane <- file("./profanity.txt", "r")
+# profanity_vector <- VectorSource(readLines(conprofane))
+# corpus <- tm_map(corpus, removeWords, profanity_vector)
 
-clean_data<-function(text){
-  # clean text input
+InputTokens <- function(text){
+  # clean inputted text
   cleanText <- removePunctuation(text)
   cleanText <- removeNumbers(cleanText)
   cleanText <- str_replace_all(cleanText, "[^[:alnum:]]", " ")
@@ -26,24 +22,32 @@ clean_data<-function(text){
   cleanText <- tolower(cleanText)
   return(cleanText)}
 
-clean_ipt <- function(text){
+TextInput <- function(text){
   # separate text input into individual words
-  ipt <- clean_data(text)
-  ipt <- txt.to.words.ext(ipt, language="English", preserve.case=T)
-  return(ipt)}
+  InputWords <- InputTokens(text)
+  InputWords <- txt.to.words.ext(InputWords, language="English",
+                                 preserve.case=T)
+  return(InputWords)}
 
-NextWordPrediction <- function(n,ipt){
+NextWordPrediction <- function(n, InputWords){
   # search ngram data table starting with the 3rd column of unigrams
-  if (n>=3){ipt <- ipt[(n-2):n]}
-  else if(n==2){ipt <- c(NA, ipt)}
-  else {ipt <- c(NA, NA, ipt)}
+  if (n>=3){InputWords <- InputWords[(n-2):n]}
+  else if(n==2){InputWords <- c(NA, InputWords)}
+  else {InputWords <- c(NA, NA, InputWords)}
   
-  # subset the prediction column with text input matching
-  pt <- as.character(NxtWrd[NxtWrd$n1==ipt[1] & NxtWrd$n2==ipt[2] & NxtWrd$n3==ipt[3],][1,]$pred)
+  # 3 words inputted - find the prediction
+  pt <- as.character(trigramPred[trigramPred$n1==InputWords[1] &
+                      trigramPred$n2==InputWords[2] &
+                      trigramPred$n3==InputWords[3],][1,]$Pred)
   
+  # 2 words inputted - find the prediction
   if(is.na(pt)){
-    pt <- as.character(NxtWrd[NxtWrd$n2==ipt[2] & NxtWrd$n3==ipt[3],][1,]$pred)
-    if(is.na(pt)){pt <- as.character(NxtWrd[NxtWrd$n3==ipt[3],][1,]$pred)}}
+    pt <- as.character(trigramPred[trigramPred$n2==InputWords[2] &
+                        trigramPred$n3==InputWords[3],][1,]$Pred)
   
-  #return matching prediction unigram
+  # 1 word inputted - find the prediction  
+  if(is.na(pt)){
+    pt <- as.character(trigramPred[trigramPred$n3==InputWords[3],][1,]$Pred)}}
+  
+  #return prediction unigram
   print(pt)}

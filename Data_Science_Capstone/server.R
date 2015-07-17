@@ -4,16 +4,17 @@ library(tm)
 library(stringr)
 library(stringi)
 source("Global.R")
-load("NgramTable.RData")
+# load("NgramTable.RData")
+load("TrigramTable.RData")
 
 shinyServer(function(input, output) {
-  output$value <- renderPrint({ input$text })
+  output$value <- renderPrint({input$text})
   
   pt <- reactive({
     text <- input$text
-    ipt <- clean_ipt(text)
-    n <- length(ipt)
-    pt <- NextWordPrediction(n, ipt)})
+    InputWords <- TextInput(text)
+    n <- length(InputWords)
+    pt <- NextWordPrediction(n, InputWords)})
   
   output$prediction <- renderPrint(pt())
 })

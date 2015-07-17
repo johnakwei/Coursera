@@ -1,5 +1,4 @@
 library(shiny)
-library(markdown)
 
 shinyUI(pageWithSidebar(
     headerPanel("Next Word Prediction App - Data Science Capstone Project"),
