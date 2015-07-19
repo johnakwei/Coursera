@@ -36,18 +36,18 @@ NextWordPrediction <- function(n, InputWords){
   else {InputWords <- c(NA, NA, InputWords)}
   
   # 3 words inputted - find the prediction
-  pt <- as.character(trigramPred[trigramPred$n1==InputWords[1] &
+  prediction <- as.character(trigramPred[trigramPred$n1==InputWords[1] &
                       trigramPred$n2==InputWords[2] &
                       trigramPred$n3==InputWords[3],][1,]$Pred)
   
   # 2 words inputted - find the prediction
-  if(is.na(pt)){
-    pt <- as.character(trigramPred[trigramPred$n2==InputWords[2] &
+  if(is.na(prediction)){
+    prediction <- as.character(trigramPred[trigramPred$n2==InputWords[2] &
                         trigramPred$n3==InputWords[3],][1,]$Pred)
   
   # 1 word inputted - find the prediction  
-  if(is.na(pt)){
-    pt <- as.character(trigramPred[trigramPred$n3==InputWords[3],][1,]$Pred)}}
+  if(is.na(prediction)){
+    prediction <- as.character(trigramPred[trigramPred$n3==InputWords[3],][1,]$Pred)}}
   
   #return prediction unigram
-  print(pt)}
+  print(prediction)}
