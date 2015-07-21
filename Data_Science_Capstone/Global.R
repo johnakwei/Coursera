@@ -5,25 +5,21 @@ library(stringi)
 library(data.table)
 # load("NgramTable.RData")
 load("TrigramTable.RData")
-# Change trigramPred to trigramPred
 
- 
-# Profanity Filtering
-# conprofane <- file("./profanity.txt", "r")
-# profanity_vector <- VectorSource(readLines(conprofane))
-# corpus <- tm_map(corpus, removeWords, profanity_vector)
+# profanity <- readLines("profanity/en_US/profanity.txt")
 
+# clean inputted text
 InputTokens <- function(text){
-  # clean inputted text
   cleanText <- removePunctuation(text)
   cleanText <- removeNumbers(cleanText)
   cleanText <- str_replace_all(cleanText, "[^[:alnum:]]", " ")
   cleanText <- stripWhitespace(cleanText)
   cleanText <- tolower(cleanText)
+#  cleanText <- tm_map(corpus, removeWords, c(stopwords("english"), profanity))
   return(cleanText)}
 
+# separate text input into individual words
 TextInput <- function(text){
-  # separate text input into individual words
   InputWords <- InputTokens(text)
   InputWords <- txt.to.words.ext(InputWords, language="English",
                                  preserve.case=T)
