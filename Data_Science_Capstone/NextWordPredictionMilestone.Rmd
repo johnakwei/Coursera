@@ -1,0 +1,138 @@
+---
+title: "Next Word Prediction App - Milestone Report"
+author: "John Akwei"
+date: "Wednesday, July 08, 2015"
+output: html_document
+---
+
+# Synopsis  
+This is a milestone report on the initial stages, (1st month), of the creation of a Next Word Prediction App. The project is for the Data Science Capstone course from Coursera, and Johns Hopkins University. The text prediction based company, SwiftKey, is a partner in this phase of the Data Science Specialization course.  
+
+The objective of the Next Word Prediction App project, (lasting two months), is to implement an application, capable of predicting the most likely next word that the application user will input, after the inputting of 1 or more words. The application utilizes Natural Language Processing programmed in the R Language, and is hosted by the shinyapps.io platform. In order to perform Natural Language Processing, the application's algorithm utilizes examples of Natural Language text from news, blogs, and Twitter, saved into .txt files.  
+
+This milestone report examines the .txt files, in order to determine the characteristics of these datasets for Natural Language Processing. The datasets are statistically examined with the R programming language, and the IDE - RStudio.  
+
+The Natural Language Processing datasets, (or "Corpora"), are available from http://www.corpora.heliohost.org. This project utilizes the same files from http://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip. The initial application development will concentrate on English language text only.  
+
+# Required R language libraries  
+The following script includes the R language packages needed for the initial stages of Next Word Prediction App project:  
+```{r, message=F, warning=F}
+if (!require("data.table")) {install.packages("datasets"); require("data.table")}
+if (!require("data.table")) {install.packages("data.table"); require("data.table")}
+if (!require("reshape2")) {install.packages("reshape2"); require("reshape2")}
+if (!require("stylo")) {install.packages("stylo"); require("stylo")}
+if (!require("tm")) {install.packages("tm"); require("tm")}
+if (!require("stringr")) {install.packages("stringr"); require("stringr")}
+if (!require("stringi")) {install.packages("stringi"); require("stringi")}
+if (!require("wordcloud")) {install.packages("wordcloud"); require("wordcloud")}
+if (!require("slam")) {install.packages("slam"); require("slam")}
+if (!require("RWeka")) {install.packages("RWeka"); require("RWeka")}
+if (!require("ggplot2")) {install.packages("ggplot2"); require("ggplot2")}
+```
+
+```{r, echo=F, message=F, warning=F}
+library(data.table)
+library(reshape2)
+library(stylo)
+library(tm)
+library(stringr)
+library(stringi)
+library(wordcloud)
+library(slam)
+library(RWeka)
+library(ggplot2)
+```
+
+# Data Acquistion  
+The source of Corpus files for Natural Language Processing is http://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip.  
+
+The news, blogs, and twitter datasets are imported as character datasets:  
+```{r, message=F, warning=F, cache=T}
+blogs <- readLines("Coursera-SwiftKey/final/en_US/en_US.blogs.txt", encoding="UTF-8")
+news <- readLines("Coursera-SwiftKey/final/en_US/en_US.news.txt", encoding="UTF-8")
+twitter <- readLines("Coursera-SwiftKey/final/en_US/en_US.twitter.txt",
+                     encoding="UTF-8")
+```
+
+# Data Optimization of the NLP Dataset via Tokenization  
+The datasets are filtered to remove whitespace, punctuation, and numbers. Then converted to lower case.  
+```{r, echo=F, message=F, warning=F, cache=T}
+textOptimal <- function(corpus){
+  cleanText <- removePunctuation(corpus)
+  cleanText <- removeNumbers(cleanText)
+  cleanText <- str_replace_all(cleanText, "[^[:alnum:]]", " ")
+  cleanText <- stripWhitespace(cleanText)
+  cleanText <- tolower(cleanText)
+  return(cleanText)}
+
+blogOptimal <- textOptimal(blogs[1:100])
+print("Optimized line from blogs dataset:")
+blogOptimal[1]
+newsOptimal <- textOptimal(news[1:100])
+print("Optimized line from news dataset:")
+newsOptimal[1]
+twitterOptimal <- textOptimal(twitter[1:100])
+print("Optimized line from twitter dataset:")
+twitterOptimal[1]
+```
+
+# Exploratory Data Analysis of Blogs, News, and Twitter datasets  
+```{r, echo=F, message=F, warning=F, cache=T}
+print(paste("File Size for blogs dataset:", file.info("Coursera-SwiftKey/final/en_US/en_US.blogs.txt")$size / 1024^2))
+print(paste("File Size for news dataset:", file.info("Coursera-SwiftKey/final/en_US/en_US.news.txt")$size / 1024^2))
+print(paste("File Size for twitter dataset:", file.info("Coursera-SwiftKey/final/en_US/en_US.twitter.txt")$size / 1024^2))
+print(paste("Lines in blogs dataset:", stri_stats_general(blogs)[1]))
+print(paste("Lines in news dataset:", stri_stats_general(news)[1]))
+print(paste("Lines in twitter dataset:", stri_stats_general(twitter)[1]))
+print(paste("Characters in blogs dataset:", stri_stats_general(blogs)[3]))
+print(paste("Characters in news dataset:", stri_stats_general(news)[3]))
+print(paste("Characters in twitter dataset:", stri_stats_general(twitter)[3]))
+words_blogs <- stri_count_words(blogs)
+words_news <- stri_count_words(news)
+words_twitter <- stri_count_words(twitter)
+print("Summary of blogs dataset word count:")
+summary(words_blogs)
+print("Summary of news dataset word count:")
+summary(words_news)
+print("Summary of twitter dataset word count:")
+summary(words_twitter)
+blogs2 <- readLines("Coursera-SwiftKey/final/en_US/en_US.blogs.txt",
+                   encoding="UTF-8", 10)
+news2 <- readLines("Coursera-SwiftKey/final/en_US/en_US.news.txt",
+                  encoding="UTF-8", 10)
+twitter2 <- readLines("Coursera-SwiftKey/final/en_US/en_US.twitter.txt",
+                     encoding="UTF-8", 10)
+print("Word Cloud for blogs dataset:")
+cloud <- c(blogs2, news2, twitter2)
+wordcloud (cloud, scale=c(5,0.5), max.words=200, random.order=F, 
+           rot.per=0.35, use.r.layout=F, colors=brewer.pal(8, 'Dark2'))
+ngramPlot <- c(blogs2, news2, twitter2)
+ngramData <- NGramTokenizer(ngramPlot, Weka_control(min=1, max=1, delimiters=" \\r\\n\\t.,;:\"()?!"))
+ngramPlotAll <- data.frame(table(ngramData))
+ngramPlotTen <- ngramPlotAll[54:60,]
+qplot(ngramPlotTen$ngramData, ngramPlotTen$Freq, ngramPlotTen,
+      xlab="Unigrams", ylab="Frequency", Main="Plot of Unigram Frequency")
+```
+
+# Interesting Findings About The Datasets  
+1) The twitter dataset is useful for general limited text input, and the news and blogs datasets are useful for higher level text input.  
+
+2) Combining and tokenizing the three datasets creates nonsequiturs, via the last word of a sentence being followed by the first word of a following sentence. However, the sequiturs created by the tokenization process probably outweigh the nonsequiturs in frequency, and thereby preserve the accuracy of the prediction algorithm.  
+
+# Future Plan  
+1) Create an Ngram Table of unigrams, bigrams, and trigrams with preprocessed prediction unigrams, and a word frequency column to sort the most reliable predictions.  
+2) Script application code to compare user input with the prediction table.
+3) Explore ngram-based NLP for prediction of the word being typed from initial typed letters.  
+4) Expand the capabilities of the algorithm to process longer lines of text.
+5) Explore learning functions to update the ngram table based on user specific next words.  
+
+# Summary  
+Initial Exploratory Data Analysis allows for an understanding of the scope of tokenization required for the final dataset. Then, via tokenization, it is possible to arrive at a final Corpora for Natural Language Processing via Ngrams.  
+
+There are about 3 million lines of text in the combined Corpora. Analysis of word frequency within the Corpora allows for reliable Statistical Inference, in order to find possible Next Words. The total object size of the Corpora is very possibly reducible to a file size that prevents slow processing times, thereby allowing for real time interaction via text input.  
+
+# References  
+http://cran.r-project.org/web/views/NaturalLanguageProcessing.html  
+http://www.corpora.heliohost.org/aboutcorpus.html  
+http://weka.wikispaces.com/  
+https://en.wikipedia.org/wiki/N-gram  
