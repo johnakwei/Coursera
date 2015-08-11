@@ -3,8 +3,8 @@ library(tm)
 library(stringr)
 library(stringi)
 library(data.table)
-# load("NgramTable.RData")
-load("TrigramTable.RData")
+load("NgramTable.RData")
+# load("TrigramTable.RData")
 
 # profanity <- readLines("profanity/en_US/profanity.txt")
 
@@ -32,18 +32,18 @@ NextWordPrediction <- function(n, InputWords){
   else {InputWords <- c(NA, NA, InputWords)}
   
   # 3 words inputted - find the prediction
-  prediction <- as.character(trigramPred[trigramPred$n1==InputWords[1] &
-                      trigramPred$n2==InputWords[2] &
-                      trigramPred$n3==InputWords[3],][1,]$Pred)
+  prediction <- as.character(NxtWrd[NxtWrd$n1==InputWords[1] &
+                      NxtWrd$n2==InputWords[2] &
+                      NxtWrd$n3==InputWords[3],][1:4,]$Pred)
   
   # 2 words inputted - find the prediction
   if(is.na(prediction)){
-    prediction <- as.character(trigramPred[trigramPred$n2==InputWords[2] &
-                        trigramPred$n3==InputWords[3],][1,]$Pred)
+    prediction <- as.character(NxtWrd[NxtWrd$n2==InputWords[2] &
+                        NxtWrd$n3==InputWords[3],][1:4,]$Pred)
   
   # 1 word inputted - find the prediction  
   if(is.na(prediction)){
-    prediction <- as.character(trigramPred[trigramPred$n3==InputWords[3],][1,]$Pred)}}
+    prediction <- as.character(NxtWrd[NxtWrd$n3==InputWords[3],][1:4,]$Pred)}}
   
   #return prediction unigram
   print(prediction)}
