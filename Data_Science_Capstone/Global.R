@@ -34,16 +34,39 @@ NextWordPrediction <- function(n, InputWords){
   # 3 words inputted - find the prediction
   prediction <- as.character(NxtWrd[NxtWrd$n1==InputWords[1] &
                       NxtWrd$n2==InputWords[2] &
-                      NxtWrd$n3==InputWords[3],][1:4,]$Pred)
+                      NxtWrd$n3==InputWords[3],][1,]$Pred)
   
   # 2 words inputted - find the prediction
   if(is.na(prediction)){
     prediction <- as.character(NxtWrd[NxtWrd$n2==InputWords[2] &
-                        NxtWrd$n3==InputWords[3],][1:4,]$Pred)
+                        NxtWrd$n3==InputWords[3],][1,]$Pred)
   
   # 1 word inputted - find the prediction  
   if(is.na(prediction)){
-    prediction <- as.character(NxtWrd[NxtWrd$n3==InputWords[3],][1:4,]$Pred)}}
+    prediction <- as.character(NxtWrd[NxtWrd$n3==InputWords[3],][1,]$Pred)}}
+  
+  #return prediction unigram
+  print(prediction)}
+
+NextWordPrediction2 <- function(n, InputWords){
+  # search ngram data table starting with the 3rd column of unigrams
+  if (n>=3){InputWords <- InputWords[(n-2):n]}
+  else if(n==2){InputWords <- c(NA, InputWords)}
+  else {InputWords <- c(NA, NA, InputWords)}
+  
+  # 3 words inputted - find the prediction
+  prediction <- as.character(NxtWrd[NxtWrd$n1==InputWords[1] &
+                                      NxtWrd$n2==InputWords[2] &
+                                      NxtWrd$n3==InputWords[3],][2:4,]$Pred)
+  
+  # 2 words inputted - find the prediction
+  if(is.na(prediction)){
+    prediction <- as.character(NxtWrd[NxtWrd$n2==InputWords[2] &
+                                        NxtWrd$n3==InputWords[3],][2:4,]$Pred)
+    
+  # 1 word inputted - find the prediction  
+  if(is.na(prediction)){
+      prediction <- as.character(NxtWrd[NxtWrd$n3==InputWords[3],][2:4,]$Pred)}}
   
   #return prediction unigram
   print(prediction)}
