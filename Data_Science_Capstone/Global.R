@@ -6,8 +6,6 @@ library(data.table)
 load("NgramTable.RData")
 # load("TrigramTable.RData")
 
-# profanity <- readLines("profanity/en_US/profanity.txt")
-
 # clean inputted text
 InputTokens <- function(text){
   cleanText <- removePunctuation(text)
@@ -15,7 +13,6 @@ InputTokens <- function(text){
   cleanText <- str_replace_all(cleanText, "[^[:alnum:]]", " ")
   cleanText <- stripWhitespace(cleanText)
   cleanText <- tolower(cleanText)
-#  cleanText <- tm_map(corpus, removeWords, c(stopwords("english"), profanity))
   return(cleanText)}
 
 # separate text input into individual words
@@ -54,17 +51,17 @@ NextWordPrediction2 <- function(n, InputWords){
   else if(n==2){InputWords <- c(NA, InputWords)}
   else {InputWords <- c(NA, NA, InputWords)}
   
-  # 3 words inputted - find the prediction
+  # 3 words inputted - find the predictions
   prediction <- as.character(NxtWrd[NxtWrd$n1==InputWords[1] &
                                       NxtWrd$n2==InputWords[2] &
                                       NxtWrd$n3==InputWords[3],][2:4,]$Pred)
   
-  # 2 words inputted - find the prediction
+  # 2 words inputted - find the predictions
   if(is.na(prediction)){
     prediction <- as.character(NxtWrd[NxtWrd$n2==InputWords[2] &
                                         NxtWrd$n3==InputWords[3],][2:4,]$Pred)
     
-  # 1 word inputted - find the prediction  
+  # 1 word inputted - find the predictions
   if(is.na(prediction)){
       prediction <- as.character(NxtWrd[NxtWrd$n3==InputWords[3],][2:4,]$Pred)}}
   
