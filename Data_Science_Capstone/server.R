@@ -26,9 +26,17 @@ shinyServer(function(input, output) {
     n <- length(InputWords)
     prediction2 <- NextWordPrediction2(n, InputWords)})
   
-  # Predictions for User Interface
-  output$prediction <- renderPrint(prediction())
-  output$prediction2 <- renderPrint(prediction2())
+  output$best <- renderUI({ best <- prediction()
+                             fluidRow( column(12, align="center"),
+                             actionButton("NextWord", label=best)
+                             )})
+  
+  output$nbest <- renderUI({ nbest <- prediction2()
+                             fluidRow( column(12, align="center"),
+                             actionButton("NextWord", label=nbest[2]),
+                             actionButton("nbest2", label=nbest[3]),
+                             actionButton("nbest3", label=nbest[4])
+                             )})
   
   # Wordcloud
   output$textCloud <- renderPlot({

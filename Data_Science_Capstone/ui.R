@@ -13,10 +13,8 @@ shinyUI(pageWithSidebar(
       h4('Text Entered:'),
       verbatimTextOutput("value"),
       h4('Single Word Prediction:'),
-      verbatimTextOutput("prediction"),
+      uiOutput("best"),
       h4('Other Possible Next Words:'),
-      verbatimTextOutput("prediction2")
-#     h4('Text Cloud:')
-#     plotOutput("textCloud")
+      uiOutput("nbest")
       )
     ))
