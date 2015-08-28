@@ -6,6 +6,11 @@ library(data.table)
 load("NgramTable.RData")
 # load("TrigramTable.RData")
 
+#Eliminate Profanity
+# profane <- read.csv("http://www.frontgatemedia.com/new/wp-content/uploads/2014/03/Terms-to-Block.csv", skip = 3)
+# profane <- as.vector(profane[,2])
+# profane <- gsub(",", "", profane)
+
 # clean inputted text
 InputTokens <- function(text){
   cleanText <- removePunctuation(text)
@@ -13,6 +18,7 @@ InputTokens <- function(text){
   cleanText <- str_replace_all(cleanText, "[^[:alnum:]]", " ")
   cleanText <- stripWhitespace(cleanText)
   cleanText <- tolower(cleanText)
+#   cleanText <- removeWords(cleanText, profane)
   return(cleanText)}
 
 # separate text input into individual words

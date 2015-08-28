@@ -10,7 +10,7 @@ load("NgramTable.RData")
 # load("TrigramTable.RData")
 
 shinyServer(function(input, output) {
-  output$value <- renderPrint({input$text})
+  output$value <- renderText({input$text})
 
   # Single Word Prediction
   prediction <- reactive({
@@ -40,9 +40,10 @@ shinyServer(function(input, output) {
   
   # Wordcloud
   output$textCloud <- renderPlot({
-    text <- input$text
+    text <- {input$text}
     Words <- TextInput(text)
     wordcloud(Words, scale=c(5, 0.5), min.freq=1, max.words=50, random.order=T,
               random.color=T, rot.per=0.35, use.r.layout=F,
-              colors=brewer.pal(8, "Dark2"))})
+              colors=brewer.pal(8, "Dark2"))
+    })
 })
