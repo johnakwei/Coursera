@@ -26,18 +26,28 @@ shinyServer(function(input, output) {
     n <- length(InputWords)
     prediction2 <- NextWordPrediction2(n, InputWords)})
   
-  output$best <- renderUI({ best <- prediction()
+  output$nbest <- renderUI({ nbest <- prediction()
                              fluidRow( column(12, align="center"),
-                             actionButton("NextWord", label=best)
-                             )})
-  
-  output$nbest <- renderUI({ nbest <- prediction2()
-                             fluidRow( column(12, align="center"),
-                             actionButton("NextWord", label=nbest[2]),
-                             actionButton("nbest2", label=nbest[3]),
+                             actionButton("NextWord", label=nbest[1]),
+                             actionButton("nbest2", label=nbest[2]),
+                             actionButton("nbest3", label=nbest[3]),
                              actionButton("nbest3", label=nbest[4])
                              )})
+
+#   # Append Text Field when actionbutton() clicked  
+#   output$value <- renderText({
+#                   observeEvent(input$NextWord,
+#                   if (!is.null(input$NextWord))
+#                       output$value <- renderText({nbest[1]})
+#                       else
+#                       output$value <- renderText({input$text}))
+#                   })
   
+#   # Prediction Graph
+#   output$predictionGraph <- renderPlot({plotData <- prediction()
+#                             fluidRow( column(12, align="center"),
+#                             plot(plotData[5], plotData[1:3]))})
+
   # Wordcloud
   output$textCloud <- renderPlot({
     text <- {input$text}
