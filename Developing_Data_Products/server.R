@@ -1,5 +1,6 @@
 library(UsingR)
 library(shiny)
+library(ggplot2)
 
 # Parse CHSI data for application.
 dt <- read.csv("chsi_dataset/RISKFACTORSANDACCESSTOCARENA.csv")
@@ -16,7 +17,6 @@ rm(dt2Columns)
 
 shinyServer(
   function(input, output) {
-    
     # Create County ListBox from selected State.
     output$countySelector <- renderUI({
             CountyList <- subset(CountyState,
@@ -43,6 +43,12 @@ shinyServer(
             barplot(as.matrix(CountyDemographics[1, 10:15]),
             col="orange", main="County Demographics",
             xlab="Demographic Categories", ylab="Percentage")})
+#             pltData <- CountyDemographics[1, 10:15]
+#             ggplot(pltData, aes(x~y)) +
+#             stat_summary(geom="bar", fun.y="sum") + 
+#             xlab("Demographic Categories") +
+#             ylab("Percentage") +
+#             ggtitle("County Demographics")})
     
     # Print County Population Density.
     output$text2 <- renderText({

@@ -1,4 +1,5 @@
 library(shiny)
+library(ggplot2)
 
 # Parse CHSI data for application.
 dt <- read.csv("chsi_dataset/RISKFACTORSANDACCESSTOCARENA.csv")
@@ -14,8 +15,9 @@ CountyState <- cbind(CountyState, dt2Columns)
 rm(dt2Columns)
 
 shinyUI(pageWithSidebar(
-  headerPanel("Community Demographic Health Status"),
+  headerPanel(h1("Community Demographic Health App", style="color:lightgreen")),
   sidebarPanel(
+    tags$head(tags$link(rel="stylesheet", type="text/css", href="bootstrap.css")),
     selectInput("State", label=h5("Select State"), 
                 choices=CountyState$CHSI_State_Name, selected=1),
     uiOutput("countySelector")
@@ -30,18 +32,18 @@ shinyUI(pageWithSidebar(
       "County Demographics, an assessment of Population Density and Poverty Rate ",
       "of the selected County, and graphs of local health risk levels, ",
       "average State health risk levels, and average USA health risk levels."),
-    h2('County Demographics'),
-    h4('For:'),
+    h2('County Demographics', style="color:lightblue"),
+    h4('For:', style="color:lightblue"),
     textOutput('text9'),
     textOutput('text10'),
-    h4('Population Density:'),
+    h4('Population Density:', style="color:lightblue"),
     textOutput('text1'),
-    h2('County Demographics Chart'),
+    h2('County Demographics Chart', style="color:lightblue"),
     plotOutput("demoHist"),
-    h2("County Demographics Assessment:"),
+    h2("County Demographics Assessment:", style="color:lightblue"),
     textOutput('text2'),
     textOutput('text3'),
-    h2('Risk Factors Comparison Charts'),
+    h2('Risk Factors Comparison Charts', style="color:lightblue"),
     plotOutput("newHist"),
     plotOutput("StateHist"),
     plotOutput("USAHist"),
