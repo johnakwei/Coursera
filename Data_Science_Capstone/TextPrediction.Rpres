@@ -1,0 +1,62 @@
+Next Word Prediction App
+========================================================
+author: by John Akwei, ECMp ERMp Data Scientist, Founder of ContextBase
+date: 9/8/2015
+font-family: 'Helvetica'
+transition: rotate
+
+Next Word Prediction App
+========================================================
+![ContextBase Logo](ContextBase Logo.jpg)
+***
+An application that suggests the Next Word a User might type, by analyzing the previously typed words:
+
+- The application is found at:
+- <small>https://johnakwei1.shinyapps.io/NextWordPrediction.</small>
+- The data required for the prediction algorithm was recorded from online News, Blogs, & Twitter.
+- The application was developed by John Akwei, for the Data Science Capstone Project from Johns Hopkins University, and Coursera.
+
+Application User Interface
+========================================================
+The application User inputs text into the field on the left of the screen.
+
+Then, on the right side of the screen, the application displays:
+
+- The user inputted text, (Text Entered:)
+- The suggestion for the next word to enter, (Next Word:)
+- an explanation of the usefulness, and origin, of the application
+
+Data Overview
+========================================================
+transition: rotate
+The Data is from the text prediction-based company, "SwiftKey", and is located at:
+<small>"http://www.corpora.heliohost.org".</small>
+***
+```{r, echo=F, message=F, warning=F}
+library(RWeka)
+library(ggplot2)
+blogs2 <- readLines("en_US.blogs.txt", encoding="UTF-8", 10)
+news2 <- readLines("en_US.news.txt", encoding="UTF-8", 10)
+twitter2 <- readLines("en_US.twitter.txt", encoding="UTF-8", 10)
+ngramPlot <- c(blogs2, news2, twitter2)
+ngramData <- NGramTokenizer(ngramPlot, Weka_control(min=1, max=1, delimiters=" \\r\\n\\t.,;:\"()?!"))
+ngramPlotAll <- data.frame(table(ngramData))
+ngramPlotTen <- ngramPlotAll[54:60,]
+qplot(ngramPlotTen$ngramData, ngramPlotTen$Freq, ngramPlotTen,
+      xlab="Unigrams", ylab="Frequency", Main="Plot of Unigram Frequency")
+```
+
+Next Word Prediction App
+========================================================
+transition: rotate
+The Next Word Prediction App is provided free, for anyone interested in Natural Language Processing, to use:
+<small>https://johnakwei1.shinyapps.io/NextWordPrediction</small>
+```{r, echo=F, message=F, warning=F}
+library(wordcloud)
+blogs2 <- readLines("en_US.blogs.txt", encoding="UTF-8", 10)
+news2 <- readLines("en_US.news.txt", encoding="UTF-8", 10)
+twitter2 <- readLines("en_US.twitter.txt", encoding="UTF-8", 10)
+ngramPlot <- c(blogs2, news2, twitter2)
+wordcloud (ngramPlot, scale=c(5,0.5), max.words=200, random.order=F, 
+           rot.per=0.35, use.r.layout=F, colors=brewer.pal(8, 'Dark2'))
+```
