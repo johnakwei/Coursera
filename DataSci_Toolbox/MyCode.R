@@ -2389,17 +2389,17 @@ DT::datatable(m, extensions = "Scroller",
 
 # Access Twitter API
 # library(twitteR)
-# consumer_key <- "UowkpfBq1IfPl4sgHPfuxhzwO"
-# consumer_secret <- "1A1kp5sYhARgk9pQT2YAzj8AUWMNyhVVRRBf4LKVP9lEmJGbge"
-# access_token <- "758080422345531398-GKSngPSzL5Sm7kJKw1T1KAvs5UWSu2R"
-# access_secret <- "OTGFuH93JapGEqGBzHDu8Ld8S0Nk0lyHLtFNgXUEADYbE"
+# consumer_key <- " "
+# consumer_secret <- " "
+# access_token <- " "
+# access_secret <- " "
 # setup_twitter_oauth(consumer_key, consumer_secret,access_token,access_secret)
 
 # library(twitteR)
-# api_key <- "kHKPGpLcPtp1Gdoi1Hvd7TeyC"
-# api_secret <- "wK43Hr9w6TpZRPWGZxBc6pF1AFLfFsauJqgajX5RfrPLP2JCpv"
-# access_token <- "11265142-D1H3VV0ktAzWSKT6dXsI9LpXq46chrFMZSZ2J0DOn"
-# access_token_secret <- "Zbwtux2UWrQpCljsZuJnw9fROV2O3ghWmm5YFhsuY8LIX"
+# api_key <- " "
+# api_secret <- " "
+# access_token <- " "
+# access_token_secret <- " "
 # options(httr_oauth_cache=T)
 # setup_twitter_oauth(api_key, api_secret, access_token=NULL, access_secret=NULL)
 # setup_twitter_oauth(api_key, api_secret, access_token, access_token_secret)
@@ -2774,11 +2774,11 @@ library(httr)
 library(jsonlite)
 
 # Fiverr client authenticate information
-fiverr_clientid <- "72a5e0fce39f435ebccfc1862fd052fa"
-fiverr_clientsecret <- "650b10b21628444fabf2ddea36daa922"
-fiverr_username <- "ayed.alsabawi@predacitycapital.com"
-fiverr_password <- "Abcd1234@"
-fiverr_payload <- "grant_type=password&client_id=72a5e0fce39f435ebccfc1862fd052fa&client_secret=650b10b21628444fabf2ddea36daa922&username=ayed.alsabawi@predacitycapital.com&password=Abcd1234@"
+fiverr_clientid <- " "
+fiverr_clientsecret <- " "
+fiverr_username <- " "
+fiverr_password <- " "
+fiverr_payload <- " "
 fiverr_payload004 <- list(
   grant_type='password',
   client_id=fiverr_clientid,
@@ -2790,10 +2790,10 @@ fiverr_payload004 <- list(
 # All API access information
 Prosper_Base_Address <- "https://api.prosper.com/v1"
 Request_URL <- "https://api.prosper.com/v1/security/oauth/token"
-ClientID_Username <- "b7cdc9351d6d41c984bca165f00dd52e"
-ClientSecret_Password <- "0699ad550d544b93a3dbd1f73be7269d"
-Prosper_Account_Username <- "johnakwei1@gmail.com"
-Prosper_Account_Password <- "qxUa4KHnbuebiV!"
+ClientID_Username <- " "
+ClientSecret_Password <- " "
+Prosper_Account_Username <- " "
+Prosper_Account_Password <- " "
 
 headers <- gsub("\\[|\\]", "",
                 toJSON(
@@ -2886,7 +2886,7 @@ headers002 <- c('accept' = 'application/json',
 
 headers003 <- fromJSON('{ "accept": "application/json", "content-type": "application/x-www-form-urlencoded" }')
 
-payload <- "grant_type=password&client_id=b7cdc9351d6d41c984bca165f00dd52e&client_secret=0699ad550d544b93a3dbd1f73be7269d&username=johnakwei1@gmail.com&password=qxUa4KHnbuebiV!"
+payload <- " "
 
 payload003 <- list(accept='application/json',
                    'content-type'='application/x-www-form-urlencoded',
@@ -2914,7 +2914,7 @@ payload003 <- list(accept='application/json',
 # https://cran.r-project.org/web/packages/httr/vignettes/quickstart.html
 # https://cran.r-project.org/web/packages/LendingClub/LendingClub.pdf
 # https://github.com/kuhnr130/LendingClub
-# https://www.google.com/search?rlz=1C1SQJL_enUS848US848&sxsrf=ACYBGNRU3mqdFwjEVhOaBjGckD1jGO3KYA%3A1571260430362&lei=DoinXZLeFePM5gKT4oDoBw&q=httr%20post%20content%20type&ved=2ahUKEwiutqmf2aHlAhXOV98KHU4JAOoQsKwBKAB6BAgBEAE&biw=1366&bih=625
+# https://www.google.com/search?
 # https://developers.prosper.com/docs/authenticating-with-oauth-2-0/authorization-key-flow/
 
 # API documentation is at
@@ -2938,10 +2938,10 @@ rm(r)
 
 library(httr)
 auth.url <- "https://api.prosper.com/v1/security/oauth/token"
-client_id <- "72a5e0fce39f435ebccfc1862fd052fa"
-client_secret <- "650b10b21628444fabf2ddea36daa922"
-username <- "ayed.alsabawi@predacitycapital.com"
-password <- "Abcd1234@"
+client_id <- " ""
+client_secret <- " "
+username <- " "
+password <- " "
 
 # API Call to get the access token
 r <- POST(url = auth.url,
